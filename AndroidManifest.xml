@@ -29,7 +29,13 @@
         </activity>
         <activity
             android:name="org.foxteam.noisyfox.patronsline.GuideActivity"
-            android:label="@string/title_activity_guide" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:label="@string/title_activity_guide"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="org.foxteam.noisyfox.patronsline.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
     </application>
 

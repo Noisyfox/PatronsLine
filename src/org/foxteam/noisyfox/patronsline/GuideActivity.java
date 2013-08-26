@@ -20,8 +20,7 @@ import android.widget.BaseAdapter;
 @SuppressWarnings("deprecation")
 public class GuideActivity extends Activity {
 
-	final int[] mImageIds = { R.drawable.f03, R.drawable.f04, R.drawable.f05,
-			R.drawable.f06, R.drawable.f07 };
+	final int[] mImageIds = { R.drawable.f03, R.drawable.f04, R.drawable.f05 };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +125,7 @@ public class GuideActivity extends Activity {
 		e.commit();
 
 		Intent intent = new Intent();
-		intent.setClass(this, MainActivity.class);
+		intent.setClass(this, LoginActivity.class);
 		startActivity(intent);
 
 		super.finish();
