@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content" 
+  android:id="@+id/TheSplashLayout"
+  android:layout_gravity="center"
+  >
+
+	<ImageView
+	    android:id="@+id/SplashImageView"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:contentDescription="@string/hello_world" >
+
+	</ImageView>
+	<!-- 
+	Not animated
+	<ImageView 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:id="@+id/SplashImageView"
+		android:src="@drawable/lnxins"
+		android:layout_gravity="center"		
+		>
+	 -->
+</LinearLayout>
