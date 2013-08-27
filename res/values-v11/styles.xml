@@ -9,4 +9,9 @@
         <!-- API 11 theme customizations can go here. -->
     </style>
 
+    <style name="MyTheme" parent="@style/Theme.Sherlock.Light">
+        <item name="actionBarSize">@dimen/actionBarSize</item>
+        <item name="android:actionBarSize">@dimen/actionBarSize</item>
+    </style>
+    
 </resources>
