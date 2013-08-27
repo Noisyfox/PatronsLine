@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:orientation="horizontal" >
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="5dp" >
 
     <ImageView
         android:id="@+id/imageView_food"
@@ -16,7 +17,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_weight="1"
         android:orientation="vertical" >
 
@@ -56,8 +58,9 @@
         <ToggleButton
             android:id="@+id/toggleButton_star_is_bookmarked"
             style="@style/ToggleButton_Star"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
+            android:focusable="false"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true" />
 
