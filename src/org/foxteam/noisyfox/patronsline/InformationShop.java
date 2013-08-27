@@ -2,6 +2,8 @@ package org.foxteam.noisyfox.patronsline;
 
 import java.util.List;
 
+import android.graphics.Bitmap;
+
 public class InformationShop {
 
 	boolean isDetailed;
@@ -9,6 +11,7 @@ public class InformationShop {
 	String name;
 	boolean bookmark;
 	String photo;
+	Bitmap photoBitmap;
 	float mark;
 	// detail
 	String address;

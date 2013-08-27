@@ -1,5 +1,7 @@
 package org.foxteam.noisyfox.patronsline;
 
+import android.graphics.Bitmap;
+
 public class InformationFood {
 
 	String id;
@@ -7,6 +9,7 @@ public class InformationFood {
 	float price;
 	boolean special;
 	String photo;
+	Bitmap photoBitmap;
 	long likes;
 	long dislikes;
 	long comments;
