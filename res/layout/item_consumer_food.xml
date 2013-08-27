@@ -11,7 +11,7 @@
         android:layout_height="60dp"
         android:layout_weight="0"
         android:contentDescription="@string/hello_world"
-        android:src="@drawable/abs__ab_bottom_solid_dark_holo" />
+        android:src="@drawable/pic_on_loading" />
 
     <LinearLayout
         android:layout_width="match_parent"
