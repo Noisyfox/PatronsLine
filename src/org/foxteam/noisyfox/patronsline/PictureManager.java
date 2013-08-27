@@ -138,14 +138,13 @@ public class PictureManager {
 
 				HttpResponse response = httpClient.execute(post);
 
-				if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
-					return null;
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					HttpEntity httpEntity = response.getEntity();
+					InputStream is = httpEntity.getContent();
+					Bitmap image = BitmapFactory.decodeStream(is);
 
-				HttpEntity httpEntity = response.getEntity();
-				InputStream is = httpEntity.getContent();
-				Bitmap image = BitmapFactory.decodeStream(is);
-
-				return new Pair<String, Bitmap>(pid, image);
+					return new Pair<String, Bitmap>(pid, image);
+				}
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -157,23 +156,21 @@ public class PictureManager {
 				e.printStackTrace();
 			}
 
-			return null;
+			return new Pair<String, Bitmap>(pid, null);
 		}
 
 		@Override
 		protected void onPostExecute(Pair<String, Bitmap> result) {
 			synchronized (mPictureCache) {
-				if (result == null) {
-					if (mOnPictureGetListener != null) {
-						mOnPictureGetListener.onError();
-					}
-				} else {
+				if (result.second != null) {
 					if (!mPictureCache.containsKey(result.first)) {
 						mPictureCache.put(result.first, result.second);
 						onPicGet(result.first, result.second);
 					} else {
 						onPicGet(result.first, mPictureCache.get(result.first));
 					}
+				} else {
+					onPicGet(result.first, result.second);
 				}
 			}
 		}
