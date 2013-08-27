@@ -1,5 +1,8 @@
 package org.foxteam.noisyfox.patronsline;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -7,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,6 +28,7 @@ import org.apache.http.protocol.HTTP;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Pair;
 
 /**
@@ -34,9 +40,54 @@ import android.util.Pair;
  */
 public class PictureManager {
 
-	private static Map<String, Bitmap> mPictureCache = new HashMap<String, Bitmap>();
+	public final static String PATH_CACHE_FOLDER = Environment
+			.getExternalStorageDirectory().getPath()
+			+ "/.patronsline/cache/pic";
+
+	private final static Map<String, Bitmap> mPictureCache = new HashMap<String, Bitmap>();
 
 	private OnPictureGetListener mOnPictureGetListener = null;
+
+	// 从缓存中读取指定pid的图片资源
+	public boolean cacheLoad(String pid) {
+		synchronized (mPictureCache) {
+			if (mPictureCache.containsKey(pid)) {
+				return true;
+			} else {
+				// 检查缓存文件夹中有没有这个图片
+				if (isHasSdcard()) {
+					File f = new File(PATH_CACHE_FOLDER + "/" + pid + ".png");
+					if (f.exists()) {
+						try {
+							Bitmap bmp = loadBitmap(f.getAbsolutePath());
+							mPictureCache.put(pid, bmp);
+							return true;
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public static void cacheSave() {
+		synchronized (mPictureCache) {
+			Set<Entry<String, Bitmap>> set = mPictureCache.entrySet();
+			for (Entry<String, Bitmap> entry : set) {
+				String pid = entry.getKey();
+				File f = new File(PATH_CACHE_FOLDER + "/" + pid + ".png");
+				if (!f.exists()) {
+					try {
+						saveBitmap(entry.getValue(), f.getAbsolutePath());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
 
 	public void setOnPictureGetListener(OnPictureGetListener listener) {
 		mOnPictureGetListener = listener;
@@ -48,7 +99,7 @@ public class PictureManager {
 
 	public void getPicture(String pid) {
 		synchronized (mPictureCache) {
-			if (mPictureCache.containsKey(pid)) {
+			if (cacheLoad(pid)) {
 				onPicGet(pid, mPictureCache.get(pid));
 			} else {
 				new PicLoadTask().execute(pid);
@@ -127,6 +178,38 @@ public class PictureManager {
 			}
 		}
 
+	}
+
+	public static Bitmap loadBitmap(String filePath) throws IOException {
+		File f = new File(filePath);
+		FileInputStream fIn = new FileInputStream(f);
+
+		Bitmap image = BitmapFactory.decodeStream(fIn);
+
+		fIn.close();
+
+		return image;
+	}
+
+	public static void saveBitmap(Bitmap bitmap, String filePath)
+			throws IOException {
+		File f = new File(filePath);
+		f.createNewFile();
+		FileOutputStream fOut = new FileOutputStream(f);
+
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+
+		try {
+			fOut.flush();
+		} finally {
+			fOut.close();
+		}
+
+	}
+
+	public static boolean isHasSdcard() {
+		String status = Environment.getExternalStorageState();
+		return status.equals(Environment.MEDIA_MOUNTED);
 	}
 
 }
