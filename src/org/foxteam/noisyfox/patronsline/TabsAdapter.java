@@ -93,7 +93,9 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	@Override
 	public void onTabChanged(String tabId) {
 		int position = mTabHost.getCurrentTab();
-		mViewPager.setCurrentItem(position);
+		if (mViewPager.getCurrentItem() != position) {
+			mViewPager.setCurrentItem(position);
+		}
 	}
 
 	@Override
