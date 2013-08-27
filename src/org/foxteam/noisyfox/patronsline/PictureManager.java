@@ -75,6 +75,8 @@ public class PictureManager {
 	public static void cacheSave() {
 		synchronized (mPictureCache) {
 			Set<Entry<String, Bitmap>> set = mPictureCache.entrySet();
+			File dir = new File(PATH_CACHE_FOLDER);
+			dir.mkdirs();
 			for (Entry<String, Bitmap> entry : set) {
 				String pid = entry.getKey();
 				File f = new File(PATH_CACHE_FOLDER + "/" + pid + ".png");
