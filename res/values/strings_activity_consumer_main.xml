@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_label_favourite_food">收藏菜肴</string>
+    <string name="menu_refresh">刷新</string>
+    <string name="empty_text_no_favourite_food">没有收藏的菜肴</string>
+    <string name="placeholder_food_name">菜名</string>
+    <string name="placeholder_food_price">价格</string>
+    <string name="placeholder_food_price_change">涨价啦</string>
+</resources>

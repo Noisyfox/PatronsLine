@@ -93,7 +93,7 @@ public class GuideActivity extends Activity {
 			Bitmap image = null;
 			if (convertView == null) {
 				convertView = LayoutInflater.from(GuideActivity.this).inflate(
-						R.layout.gallery_item, null);
+						R.layout.item_gallery, null);
 				Gallery.LayoutParams params = new Gallery.LayoutParams(
 						Gallery.LayoutParams.FILL_PARENT,
 						Gallery.LayoutParams.FILL_PARENT);
