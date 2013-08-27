@@ -6,6 +6,7 @@ public class InformationFood {
 
 	String id;
 	String name;
+	boolean bookmark;
 	float price;
 	boolean special;
 	String photo;
