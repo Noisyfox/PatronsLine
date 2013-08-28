@@ -110,12 +110,12 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 		@Override
 		protected List<InformationFood> doInBackground(String... params) {
-			Map<String, String> arguments = new HashMap<String, String>();
+			Map<Object, Object> arguments = new HashMap<Object, Object>();
 			arguments.put("type", "food");
 			arguments.put("uid", params[0]);
 			arguments.put("session", params[1]);
 			String jsonString = NetworkHelper.doHttpRequest(
-					NetworkHelper.STR_SERVER_URL, arguments);
+					NetworkHelper.STR_SERVER_URL, arguments.entrySet());
 			if (jsonString != null) {
 
 			}
@@ -204,8 +204,8 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 			InformationFood food = mFoods.get(position);
 
 			if (convertView == null) {
-				convertView = mInflater.inflate(
-						R.layout.item_consumer_food, parent, false);
+				convertView = mInflater.inflate(R.layout.item_consumer_food,
+						parent, false);
 			}
 
 			convertView.setTag(food);

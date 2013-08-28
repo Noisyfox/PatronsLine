@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,13 +26,14 @@ import org.apache.http.protocol.HTTP;
 public class NetworkHelper {
 	static final String STR_SERVER_URL = "http://192.168.0.13/tyserver/tyapp.php";
 
-	public static String doHttpRequest(String url, Map<String, String> data) {
+	public static String doHttpRequest(String url,
+			Set<Entry<Object, Object>> data) {
 
 		try {
 			List<BasicNameValuePair> postData = new ArrayList<BasicNameValuePair>();
-			for (Map.Entry<String, String> entry : data.entrySet()) {
-				postData.add(new BasicNameValuePair(entry.getKey(), entry
-						.getValue()));
+			for (Map.Entry<Object, Object> entry : data) {
+				postData.add(new BasicNameValuePair(entry.getKey().toString(),
+						entry.getValue().toString()));
 			}
 
 			DefaultHttpClient httpClient = new DefaultHttpClient();
