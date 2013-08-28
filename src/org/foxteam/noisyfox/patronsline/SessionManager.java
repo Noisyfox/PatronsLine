@@ -21,15 +21,15 @@ import android.util.Log;
  * 
  */
 public class SessionManager {
-	public static int ACTION_USER_REGISTER = 1;
-	public static int ACTION_USER_LOGIN = 2;
+	public static final int ACTION_USER_REGISTER = 1;
+	public static final int ACTION_USER_LOGIN = 2;
 
-	public static int ERROR_OK = 0;
-	public static int ERROR_IO_FAILURE = 1;
-	public static int ERROR_NETWORK_FAILURE = 2;
-	public static int ERROR_SERVER_FAILURE = 3;
-	public static int ERROR_USER_NAME_DUPLICATE = 4;
-	public static int ERROR_USER_LOGIN_FAILURE = 5;
+	public static final int ERROR_OK = 0;
+	public static final int ERROR_IO_FAILURE = 1;
+	public static final int ERROR_NETWORK_FAILURE = 2;
+	public static final int ERROR_SERVER_FAILURE = 3;
+	public static final int ERROR_USER_NAME_DUPLICATE = 4;
+	public static final int ERROR_USER_LOGIN_FAILURE = 5;
 
 	InformationSession mSession;
 
