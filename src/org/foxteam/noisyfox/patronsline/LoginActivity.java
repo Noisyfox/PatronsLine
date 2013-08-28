@@ -16,6 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -152,7 +153,7 @@ public class LoginActivity extends Activity {
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
 			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
+			mAuthTask.execute(mUsername, mPassword);
 		}
 	}
 
@@ -201,45 +202,47 @@ public class LoginActivity extends Activity {
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	public class UserLoginTask extends AsyncTask<String, Void, Void> {
+		int errCode = -1;
+
 		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
+		protected Void doInBackground(String... params) {
+			String userName = params[0];
+			String psw = params[1];
 
-			try {
-				// Simulate network access.
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				return false;
-			}
+			SessionManager sm = new SessionManager();
 
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mUsername)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
+			errCode = sm.user_login(userName, psw);
 
-			// TODO: register the new account here.
-			return true;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(final Boolean success) {
+		protected void onPostExecute(Void result) {
 			mAuthTask = null;
 			showProgress(false);
 
-			if (success) {
+			switch (errCode) {
+			case SessionManager.ERROR_OK:
 				finish();
-
 				Intent intent = new Intent();
 				intent.setClass(LoginActivity.this, ConsumerMainActivity.class);
 				startActivity(intent);
-			} else {
+				break;
+			case SessionManager.ERROR_USER_LOGIN_FAILURE:
 				mPasswordView
 						.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
+				break;
+			case SessionManager.ERROR_NETWORK_FAILURE:
+				Toast.makeText(getApplication(),
+						R.string.error_network_failure, Toast.LENGTH_SHORT)
+						.show();
+				break;
+			default:
+				Toast.makeText(getApplication(), R.string.error_internal,
+						Toast.LENGTH_SHORT).show();
+				break;
 			}
 		}
 

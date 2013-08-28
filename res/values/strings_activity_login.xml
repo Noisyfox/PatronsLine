@@ -14,5 +14,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_network_failure">网络错误</string>
+    <string name="error_internal">内部错误</string>
 
 </resources>
