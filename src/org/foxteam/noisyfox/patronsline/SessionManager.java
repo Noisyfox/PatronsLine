@@ -32,22 +32,8 @@ public class SessionManager {
 	public static int ERROR_USER_LOGIN_FAILURE = 5;
 
 	InformationSession mSession;
-	OnSessionActionFinishedListener mOnSessionActionFinishedListener;
 
-	public void setOnSessionActionFinishedListener(
-			OnSessionActionFinishedListener listener) {
-		mOnSessionActionFinishedListener = listener;
-	}
-
-	private void callListener(InformationSession session, int action,
-			int errCode) {
-		if (mOnSessionActionFinishedListener != null) {
-			mOnSessionActionFinishedListener.onSessionActionFinished(session,
-					action, errCode);
-		}
-	}
-
-	public void user_register(String name, String psw, int sex, int type,
+	public int user_register(String name, String psw, int sex, int type,
 			Bitmap avatar, String school, String region) {
 		Map<Object, Object> params = new HashMap<Object, Object>();
 
@@ -64,16 +50,14 @@ public class SessionManager {
 					avatar);
 		} catch (IOException e) {
 			e.printStackTrace();
-			callListener(null, ACTION_USER_REGISTER, ERROR_IO_FAILURE);
-			return;
+			return ERROR_IO_FAILURE;
 		}
 
 		String response = ImageUploader.post(NetworkHelper.STR_SERVER_URL,
 				params.entrySet(), new ImageUploader.Image[] { img });
 
 		if (response == null) {
-			callListener(null, ACTION_USER_REGISTER, ERROR_NETWORK_FAILURE);
-			return;
+			return ERROR_NETWORK_FAILURE;
 		}
 
 		Log.d("session", response);
@@ -90,12 +74,9 @@ public class SessionManager {
 			case 1:// OK
 				break;
 			case -1:// 用户名重复
-				callListener(null, ACTION_USER_REGISTER,
-						ERROR_USER_NAME_DUPLICATE);
-				return;
+				return ERROR_USER_NAME_DUPLICATE;
 			case 0:// 服务器错误
-				callListener(null, ACTION_USER_REGISTER, ERROR_SERVER_FAILURE);
-				return;
+				return ERROR_SERVER_FAILURE;
 			}
 			String uid = jsonObj.getString("uid");
 			String session = jsonObj.getString("session");
@@ -104,22 +85,20 @@ public class SessionManager {
 			tmpSession.uid = uid;
 			tmpSession.session = session;
 
-			callListener(tmpSession, ACTION_USER_REGISTER, ERROR_OK);
+			return ERROR_OK;
 		} catch (JSONException e) {
 			e.printStackTrace();
-			callListener(null, ACTION_USER_REGISTER, ERROR_SERVER_FAILURE);
-			return;
+			return ERROR_SERVER_FAILURE;
 		}
 
 	}
 
-	private void loginUser(Map<Object, Object> params) {
+	private int loginUser(Map<Object, Object> params) {
 		String response = NetworkHelper.doHttpRequest(
 				NetworkHelper.STR_SERVER_URL, params.entrySet());
 
 		if (response == null) {
-			callListener(null, ACTION_USER_LOGIN, ERROR_NETWORK_FAILURE);
-			return;
+			return ERROR_NETWORK_FAILURE;
 		}
 		Log.d("session", response);
 
@@ -138,11 +117,9 @@ public class SessionManager {
 			case 1:// OK
 				break;
 			case -1:// 登陆失败
-				callListener(null, ACTION_USER_LOGIN, ERROR_USER_LOGIN_FAILURE);
-				return;
+				return ERROR_USER_LOGIN_FAILURE;
 			case 0:// 服务器错误
-				callListener(null, ACTION_USER_LOGIN, ERROR_SERVER_FAILURE);
-				return;
+				return ERROR_SERVER_FAILURE;
 			}
 
 			// 登陆成功
@@ -185,37 +162,31 @@ public class SessionManager {
 			});
 			pictureManager.getPicture(avatar);
 
-			callListener(mSession, ACTION_USER_LOGIN, ERROR_OK);
+			return ERROR_OK;
 
 		} catch (JSONException e) {
 			e.printStackTrace();
-			callListener(null, ACTION_USER_LOGIN, ERROR_SERVER_FAILURE);
-			return;
+			return ERROR_SERVER_FAILURE;
 		}
 	}
 
-	public void user_login(InformationSession userSession) {
+	public int user_login(InformationSession userSession) {
 		Map<Object, Object> params = new HashMap<Object, Object>();
 		params.put("method", "user.login");
 		params.put("uid", userSession.uid);
 		params.put("session", userSession.session);
 
-		loginUser(params);
+		return loginUser(params);
 	}
 
-	public void user_login(String userName, String psw) {
+	public int user_login(String userName, String psw) {
 		String psw_hash = hashString(psw, "SHA");
 		Map<Object, Object> params = new HashMap<Object, Object>();
 		params.put("method", "user.login");
 		params.put("name", userName);
 		params.put("password", psw_hash);
 
-		loginUser(params);
-	}
-
-	public static interface OnSessionActionFinishedListener {
-		public void onSessionActionFinished(InformationSession session,
-				int action, int errCode);
+		return loginUser(params);
 	}
 
 	private static String hashString(String data, String algorithm) {
