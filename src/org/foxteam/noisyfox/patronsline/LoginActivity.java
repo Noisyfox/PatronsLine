@@ -23,17 +23,11 @@ import android.widget.Toast;
  * well.
  */
 public class LoginActivity extends Activity {
-	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
 
 	/**
 	 * The default email to populate the email field with.
 	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+	public static final String EXTRA_EMAIL = "org.foxteam.noisyfox.patronsline.extra.EMAIL";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -221,6 +215,8 @@ public class LoginActivity extends Activity {
 		protected void onPostExecute(Void result) {
 			mAuthTask = null;
 			showProgress(false);
+
+			// errCode = SessionManager.ERROR_OK;//test code
 
 			switch (errCode) {
 			case SessionManager.ERROR_OK:
