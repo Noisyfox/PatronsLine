@@ -40,9 +40,8 @@ import android.util.Pair;
  */
 public class PictureManager {
 
-	public final static String PATH_CACHE_FOLDER = Environment
-			.getExternalStorageDirectory().getPath()
-			+ "/.patronsline/cache/pic";
+	public final static String PATH_CACHE_FOLDER = PatronsLineApplication.PATH_APP_WORKDIR
+			+ "/cache/pic";
 
 	private final static Map<String, Bitmap> mPictureCache = new HashMap<String, Bitmap>();
 

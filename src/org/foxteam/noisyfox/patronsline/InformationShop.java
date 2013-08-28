@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
 public class InformationShop {
 
 	boolean isDetailed;
-	String id;
+	String sid;
 	String name;
 	boolean bookmark;
 	String photo;

@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 public class InformationFood {
 
-	String id;
+	String fid;
 	String name;
 	boolean bookmark;
 	float price;
