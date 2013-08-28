@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -66,8 +67,10 @@ public class LoginActivity extends Activity {
 					@Override
 					public boolean onEditorAction(TextView textView, int id,
 							KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
+						if (id == EditorInfo.IME_ACTION_DONE
+								|| id == EditorInfo.IME_NULL) {
 							attemptLogin();
+
 							return true;
 						}
 						return false;
@@ -82,6 +85,7 @@ public class LoginActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
+
 						attemptLogin();
 					}
 				});
@@ -103,6 +107,11 @@ public class LoginActivity extends Activity {
 		if (mAuthTask != null) {
 			return;
 		}
+
+		// 隐藏输入法
+		((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+				.hideSoftInputFromWindow(LoginActivity.this.getCurrentFocus()
+						.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
 		// Reset errors.
 		mUsernameView.setError(null);
