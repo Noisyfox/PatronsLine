@@ -12,8 +12,6 @@ public class PatronsLineApplication extends Application {
 
 	static PatronsLineApplication mInstance = null;
 
-	SessionManager mSessionManager = new SessionManager();
-
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -25,10 +23,6 @@ public class PatronsLineApplication extends Application {
 
 	public static PatronsLineApplication getApplication() {
 		return mInstance;
-	}
-
-	public SessionManager getSessionManager() {
-		return mSessionManager;
 	}
 
 }

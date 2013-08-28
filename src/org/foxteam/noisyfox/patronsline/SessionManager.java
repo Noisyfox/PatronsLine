@@ -33,6 +33,16 @@ public class SessionManager {
 
 	InformationSession mSession;
 
+	private static SessionManager mSessionManager = new SessionManager();
+
+	private SessionManager() {
+
+	}
+
+	public static SessionManager getSessionManager() {
+		return mSessionManager;
+	}
+
 	public int user_register(String name, String psw, int sex, int type,
 			Bitmap avatar, String school, String region) {
 		Map<Object, Object> params = new HashMap<Object, Object>();
@@ -86,7 +96,7 @@ public class SessionManager {
 			tmpSession.session = session;
 
 			mSession = tmpSession;
-			
+
 			return ERROR_OK;
 		} catch (JSONException e) {
 			e.printStackTrace();

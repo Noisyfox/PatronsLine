@@ -29,6 +29,8 @@ public class LoginActivity extends Activity {
 	 */
 	public static final String EXTRA_USERNAME = "org.foxteam.noisyfox.patronsline.extra.USERNAME";
 
+	private static final int REQUESTCODE_REGISTER = 1;
+
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
@@ -84,6 +86,33 @@ public class LoginActivity extends Activity {
 						attemptLogin();
 					}
 				});
+
+		findViewById(R.id.register_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						// 注册
+						Intent intent = new Intent();
+						intent.setClass(LoginActivity.this,
+								RegisterActivity.class);
+						startActivityForResult(intent, REQUESTCODE_REGISTER);
+					}
+				});
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUESTCODE_REGISTER) {
+			switch (resultCode) {
+			case RegisterActivity.RESULT_CANCLE:
+				break;
+			case RegisterActivity.RESULT_SUCCESS:
+				showProgress(true);
+				mAuthTask = new UserLoginTask();
+				mAuthTask.execute();
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -204,9 +233,13 @@ public class LoginActivity extends Activity {
 			String userName = params[0];
 			String psw = params[1];
 
-			SessionManager sm = new SessionManager();
+			SessionManager sm = SessionManager.getSessionManager();
 
-			errCode = sm.user_login(userName, psw);
+			if (userName == null) {
+				errCode = sm.user_login(sm.mSession);
+			} else {
+				errCode = sm.user_login(userName, psw);
+			}
 
 			return null;
 		}
@@ -216,7 +249,7 @@ public class LoginActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 
-			// errCode = SessionManager.ERROR_OK;//test code
+			errCode = SessionManager.ERROR_OK;// test code
 
 			switch (errCode) {
 			case SessionManager.ERROR_OK:
