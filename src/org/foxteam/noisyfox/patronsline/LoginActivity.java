@@ -230,14 +230,13 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected Void doInBackground(String... params) {
-			String userName = params[0];
-			String psw = params[1];
-
 			SessionManager sm = SessionManager.getSessionManager();
-
-			if (userName == null) {
+			if (params == null || params.length == 0 || params[0] == null) {
 				errCode = sm.user_login(sm.mSession);
 			} else {
+				String userName = params[0];
+				String psw = params[1];
+
 				errCode = sm.user_login(userName, psw);
 			}
 
