@@ -25,16 +25,16 @@ import android.widget.Toast;
 public class LoginActivity extends Activity {
 
 	/**
-	 * The default email to populate the email field with.
+	 * The default username to populate the username field with.
 	 */
-	public static final String EXTRA_EMAIL = "org.foxteam.noisyfox.patronsline.extra.EMAIL";
+	public static final String EXTRA_USERNAME = "org.foxteam.noisyfox.patronsline.extra.USERNAME";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
 	private UserLoginTask mAuthTask = null;
 
-	// Values for email and password at the time of the login attempt.
+	// Values for username and password at the time of the login attempt.
 	private String mUsername;
 	private String mPassword;
 
@@ -52,7 +52,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mUsername = getIntent().getStringExtra(EXTRA_EMAIL);
+		mUsername = getIntent().getStringExtra(EXTRA_USERNAME);
 		mUsernameView = (EditText) findViewById(R.id.username);
 		mUsernameView.setText(mUsername);
 
@@ -95,7 +95,7 @@ public class LoginActivity extends Activity {
 
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
-	 * If there are form errors (invalid email, missing fields, etc.), the
+	 * If there are form errors (invalid username, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
 	public void attemptLogin() {
@@ -130,7 +130,7 @@ public class LoginActivity extends Activity {
 			cancel = true;
 		}
 
-		// Check for a valid email address.
+		// Check for a valid username.
 		if (TextUtils.isEmpty(mUsername)) {
 			mUsernameView.setError(getString(R.string.error_field_required));
 			focusView = mUsernameView;
