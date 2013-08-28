@@ -85,6 +85,8 @@ public class SessionManager {
 			tmpSession.uid = uid;
 			tmpSession.session = session;
 
+			mSession = tmpSession;
+			
 			return ERROR_OK;
 		} catch (JSONException e) {
 			e.printStackTrace();
