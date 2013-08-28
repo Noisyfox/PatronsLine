@@ -3,9 +3,6 @@ package org.foxteam.noisyfox.patronsline;
 import android.graphics.Bitmap;
 
 public class InformationUser {
-	String uid;
-	String session;
-
 	String name;
 	int sex;
 	int type;

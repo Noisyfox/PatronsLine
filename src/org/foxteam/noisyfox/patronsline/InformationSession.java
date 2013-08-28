@@ -4,6 +4,9 @@ import java.util.List;
 
 public class InformationSession {
 
+	String uid;
+	String session;
+
 	InformationUser user;
 
 	List<InformationShop> ownedShop;// 所管理的店铺，如果是商家则需要该参数
