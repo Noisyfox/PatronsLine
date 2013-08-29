@@ -134,7 +134,7 @@ public class ImageUploader {
 
 			return response.toString();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		} finally {
 			// 统一释放资源
 			try {
@@ -145,13 +145,15 @@ public class ImageUploader {
 					input.close();
 				}
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				e.printStackTrace();
 			}
 
 			if (conn != null) {
 				conn.disconnect();
 			}
 		}
+
+		return null;
 	}
 
 	public static class Image {
