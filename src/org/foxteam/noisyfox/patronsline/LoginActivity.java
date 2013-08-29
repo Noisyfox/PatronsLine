@@ -248,13 +248,20 @@ public class LoginActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 
-			errCode = SessionManager.ERROR_OK;// test code
+			// errCode = SessionManager.ERROR_OK;// test code
 
 			switch (errCode) {
 			case SessionManager.ERROR_OK:
 				finish();
 				Intent intent = new Intent();
-				intent.setClass(LoginActivity.this, ConsumerMainActivity.class);
+				InformationSession session = SessionManager.getSessionManager().mSession;
+				if (session.user.type == 0) {// 顾客
+					intent.setClass(LoginActivity.this,
+							ConsumerMainActivity.class);
+				} else {// 商家
+					intent.setClass(LoginActivity.this,
+							ConsumerMainActivity.class);
+				}
 				startActivity(intent);
 				break;
 			case SessionManager.ERROR_USER_LOGIN_FAILURE:
