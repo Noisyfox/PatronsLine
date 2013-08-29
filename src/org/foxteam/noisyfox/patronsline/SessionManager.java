@@ -49,7 +49,7 @@ public class SessionManager {
 
 		params.put("method", "user.register");
 		params.put("name", name);
-		params.put("password", psw);
+		params.put("password", hashString(psw, "SHA"));
 		params.put("sex", sex);
 		params.put("type", type);
 		params.put("school", school);
