@@ -48,11 +48,13 @@ public class ConsumerMainActivity extends SherlockFragmentActivity {
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setTitle("Noisyfox");
-		actionBar.setSubtitle("欢迎回来");
-
 		mInformationSession = SessionManager.getSessionManager().mSession;
+
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setTitle(mInformationSession.user.name);
+		actionBar.setSubtitle("欢迎回来");
+		actionBar.setIcon(R.drawable.avatar_empty);
+
 		mAvatarPictureManager
 				.setOnPictureGetListener(mAvatarOnPictureGetListener);
 		mAvatarPictureManager.getPicture(mInformationSession.user.avatar);

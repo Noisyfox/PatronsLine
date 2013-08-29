@@ -52,7 +52,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="5dp"
                     android:contentDescription="@string/hello_world"
-                    android:src="@drawable/head" />
+                    android:src="@drawable/avatar_empty" />
 
                 <Button
                     android:id="@+id/button_choose_avatar"
