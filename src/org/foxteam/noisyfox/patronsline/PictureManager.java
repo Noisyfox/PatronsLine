@@ -210,4 +210,7 @@ public class PictureManager {
 		return status.equals(Environment.MEDIA_MOUNTED);
 	}
 
+	public static interface OnPictureGetListener {
+		public void onPictureGet(String pid, Bitmap pic);
+	}
 }

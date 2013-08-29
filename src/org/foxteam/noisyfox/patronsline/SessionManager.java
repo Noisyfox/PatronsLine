@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
