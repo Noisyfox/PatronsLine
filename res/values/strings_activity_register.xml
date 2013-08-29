@@ -2,4 +2,20 @@
 <resources>
     
     <string name="title_activity_register">用户注册</string>
+    <string name="register_progress_register">正在注册&#8230;</string>
+    <string name="register_action_register"><b>注册</b></string>
+    <string name="register_action_change_avatar">更改头像</string>
+    <string name="prompt_password_confirm">确认密码</string>
+    <string name="prompt_school">学校</string>
+    <string name="prompt_region">地区</string>
+    <string name="prompt_is_shop_owner">我是店主</string>
+    <string name="error_invalid_username">This username is too short</string>
+    <string name="error_username_duplicate">已存在的用户名</string>
+    <string name="error_password_missmatch">Passwords don\'t match</string>
+    
+    <string-array name="sex_type">
+        <item>我是男生♂</item>
+        <item>我是女生♀</item>
+        <item>我要保密?</item>
+    </string-array>
 </resources>

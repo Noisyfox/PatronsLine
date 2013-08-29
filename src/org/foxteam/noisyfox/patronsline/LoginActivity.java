@@ -104,9 +104,9 @@ public class LoginActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUESTCODE_REGISTER) {
 			switch (resultCode) {
-			case RegisterActivity.RESULT_CANCLE:
+			case RESULT_CANCELED:
 				break;
-			case RegisterActivity.RESULT_SUCCESS:
+			case RESULT_OK:
 				showProgress(true);
 				mAuthTask = new UserLoginTask();
 				mAuthTask.execute();
