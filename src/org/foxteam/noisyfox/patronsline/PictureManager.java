@@ -61,6 +61,7 @@ public class PictureManager {
 						try {
 							Bitmap bmp = loadBitmap(f.getAbsolutePath());
 							mPictureCache.put(pid, bmp);
+							Log.d("picMgr", "Load cache:" + pid);
 							return true;
 						} catch (IOException e) {
 							e.printStackTrace();
