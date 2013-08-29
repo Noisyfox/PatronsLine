@@ -168,8 +168,8 @@ public class ImageUploader {
 				throw new NullPointerException();
 			}
 
-			// 将bitmap编码为png
-			File f = new File(PATH_TEMP_FOLDER + "/" + fileName + ".png");
+			// 将bitmap编码为jpg
+			File f = new File(PATH_TEMP_FOLDER + "/" + fileName + ".jpg");
 			f.mkdirs();
 			if (f.exists()) {
 				if (!f.delete()) {
@@ -191,7 +191,7 @@ public class ImageUploader {
 		}
 
 		String getContentType() {
-			return "image/png";
+			return "image/jpg";
 		}
 
 		byte[] getData() {

@@ -55,7 +55,7 @@ public class PictureManager {
 			} else {
 				// 检查缓存文件夹中有没有这个图片
 				if (isHasSdcard()) {
-					File f = new File(PATH_CACHE_FOLDER + "/" + pid + ".png");
+					File f = new File(PATH_CACHE_FOLDER + "/" + pid + ".jpg");
 					if (f.exists()) {
 						try {
 							Bitmap bmp = loadBitmap(f.getAbsolutePath());
@@ -78,7 +78,7 @@ public class PictureManager {
 			dir.mkdirs();
 			for (Entry<String, Bitmap> entry : set) {
 				String pid = entry.getKey();
-				File f = new File(PATH_CACHE_FOLDER + "/" + pid + ".png");
+				File f = new File(PATH_CACHE_FOLDER + "/" + pid + ".jpg");
 				if (!f.exists()) {
 					try {
 						saveBitmap(entry.getValue(), f.getAbsolutePath());
@@ -195,7 +195,7 @@ public class PictureManager {
 		f.createNewFile();
 		FileOutputStream fOut = new FileOutputStream(f);
 
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
 
 		try {
 			fOut.flush();
