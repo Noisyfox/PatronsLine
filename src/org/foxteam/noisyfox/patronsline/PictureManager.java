@@ -29,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 import android.util.Pair;
 
 /**
@@ -109,6 +110,7 @@ public class PictureManager {
 	}
 
 	private void onPicGet(String pid, Bitmap pic) {
+		Log.d("picMgr", "Pic get:" + pid);
 		if (mOnPictureGetListener != null) {
 			mOnPictureGetListener.onPictureGet(pid, pic);
 		}
