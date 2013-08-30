@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -31,6 +32,7 @@ public class SessionManager {
 	public static final int ERROR_SERVER_FAILURE = 3;
 	public static final int ERROR_USER_NAME_DUPLICATE = 4;
 	public static final int ERROR_USER_LOGIN_FAILURE = 5;
+	public static final int ERROR_INTERNAL = 6;
 
 	private InformationSession mSession;
 
@@ -164,6 +166,10 @@ public class SessionManager {
 				String shopid = jsonObj.getString("shopid");
 				tmpUser.shopid = new ArrayList<String>();
 				tmpUser.shopid.add(shopid);
+				tmpSession.ownedShop = new ArrayList<InformationShop>();
+			} else {
+				tmpSession.bookmarkFood = new ArrayList<InformationBookmarkFood>();
+				tmpSession.bookmarkShop = new ArrayList<InformationBookmarkShop>();
 			}
 
 			mSession = tmpSession;
@@ -206,6 +212,74 @@ public class SessionManager {
 		params.put("password", psw_hash);
 
 		return loginUser(params);
+	}
+
+	public int bookmark_list_food() {
+		if (mSession.user.type != 0) {
+			return ERROR_INTERNAL;
+		}
+
+		Map<Object, Object> params = new HashMap<Object, Object>();
+		params.put("method", "bookmark.list");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("type", "food");
+
+		String response = NetworkHelper.doHttpRequest(
+				NetworkHelper.STR_SERVER_URL, params.entrySet());
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+
+			switch (result) {
+			case 1:// OK
+				break;
+			case -1:// 失败
+				return ERROR_USER_LOGIN_FAILURE;
+			case 0:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+
+			mSession.bookmarkFood.clear();
+
+			JSONArray jsnonArray = jsonObj.getJSONArray("bookmarks");
+			int count = jsnonArray.length();
+			for (int i = 0; i < count; i++) {
+				JSONObject food = jsnonArray.getJSONObject(i);
+				InformationBookmarkFood bookmark = new InformationBookmarkFood();
+				bookmark.food = new InformationFood();
+				bookmark.shop = new InformationShop();
+				mSession.bookmarkFood.add(bookmark);
+
+				bookmark.bfid = food.getString("id");
+				bookmark.food.fid = food.getString("fid");
+				bookmark.food.name = food.getString("name");
+				bookmark.food.price = (float) food.getDouble("price");
+				bookmark.food.special = food.getBoolean("special");
+				bookmark.food.photo = food.getString("photo");
+				bookmark.shop.sid = food.getString("sid");
+				bookmark.shop.name = food.getString("shopname");
+			}
+
+			return ERROR_OK;
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
 	}
 
 	private static String hashString(String data, String algorithm) {
