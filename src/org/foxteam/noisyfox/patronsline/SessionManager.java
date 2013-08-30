@@ -32,7 +32,7 @@ public class SessionManager {
 	public static final int ERROR_USER_NAME_DUPLICATE = 4;
 	public static final int ERROR_USER_LOGIN_FAILURE = 5;
 
-	InformationSession mSession;
+	private InformationSession mSession;
 
 	private static SessionManager mSessionManager = new SessionManager();
 
@@ -42,6 +42,10 @@ public class SessionManager {
 
 	public static SessionManager getSessionManager() {
 		return mSessionManager;
+	}
+
+	public static InformationSession getCurrentSession() {
+		return mSessionManager.mSession;
 	}
 
 	public int user_register(String name, String psw, int sex, int type,

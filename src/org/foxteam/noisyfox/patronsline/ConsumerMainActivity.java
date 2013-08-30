@@ -22,7 +22,7 @@ public class ConsumerMainActivity extends SherlockFragmentActivity {
 	OnPictureGetListener mAvatarOnPictureGetListener = new OnPictureGetListener() {
 		@Override
 		public void onPictureGet(String pid, Bitmap pic) {
-			InformationSession is = SessionManager.getSessionManager().mSession;
+			InformationSession is = SessionManager.getCurrentSession();
 			if (pic != null && is != null && is.user != null
 					&& is.user.avatar == pid) {
 				is.user.avatarBitmap = pic;
@@ -48,7 +48,7 @@ public class ConsumerMainActivity extends SherlockFragmentActivity {
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 
-		mInformationSession = SessionManager.getSessionManager().mSession;
+		mInformationSession = SessionManager.getCurrentSession();
 
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setTitle(mInformationSession.user.name);

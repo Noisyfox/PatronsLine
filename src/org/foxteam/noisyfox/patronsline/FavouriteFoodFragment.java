@@ -32,11 +32,15 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 	List<InformationFood> mFoods = new ArrayList<InformationFood>();
 	FoodAdapter mFoodAdapter = null;
 	GetBookmarkTask mGetBookmarkTask = null;
+	
+	InformationSession mInformationSession = null;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.d("msg", "onActivityCreated");
+		
+		mInformationSession = SessionManager.getCurrentSession();
 
 		setEmptyText(getText(R.string.empty_text_no_favourite_food));
 		setHasOptionsMenu(true);

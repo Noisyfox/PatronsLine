@@ -232,7 +232,7 @@ public class LoginActivity extends Activity {
 		protected Void doInBackground(String... params) {
 			SessionManager sm = SessionManager.getSessionManager();
 			if (params == null || params.length == 0 || params[0] == null) {
-				errCode = sm.user_login(sm.mSession);
+				errCode = sm.user_login(SessionManager.getCurrentSession());
 			} else {
 				String userName = params[0];
 				String psw = params[1];
@@ -254,7 +254,7 @@ public class LoginActivity extends Activity {
 			case SessionManager.ERROR_OK:
 				finish();
 				Intent intent = new Intent();
-				InformationSession session = SessionManager.getSessionManager().mSession;
+				InformationSession session = SessionManager.getCurrentSession();
 				if (session.user.type == 0) {// 顾客
 					intent.setClass(LoginActivity.this,
 							ConsumerMainActivity.class);
