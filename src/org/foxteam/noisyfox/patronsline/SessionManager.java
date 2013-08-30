@@ -270,6 +270,7 @@ public class SessionManager {
 				bookmark.food.price = (float) food.getDouble("price");
 				bookmark.food.special = food.getBoolean("special");
 				bookmark.food.photo = food.getString("photo");
+				bookmark.food.bookmark = true;
 				bookmark.shop.sid = sid;
 				bookmark.shop.name = food.getString("shopname");
 			}
