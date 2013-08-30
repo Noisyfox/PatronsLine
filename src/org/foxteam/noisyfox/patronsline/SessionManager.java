@@ -258,17 +258,19 @@ public class SessionManager {
 			for (int i = 0; i < count; i++) {
 				JSONObject food = jsnonArray.getJSONObject(i);
 				InformationBookmarkFood bookmark = new InformationBookmarkFood();
-				bookmark.food = new InformationFood();
-				bookmark.shop = new InformationShop();
+				String fid = food.getString("fid");
+				String sid = food.getString("sid");
+				bookmark.food = InformationManager.obtainFoodInformation(fid);
+				bookmark.shop = InformationManager.obtainShopInformation(sid);
 				mSession.bookmarkFood.add(bookmark);
 
 				bookmark.bfid = food.getString("id");
-				bookmark.food.fid = food.getString("fid");
+				bookmark.food.fid = fid;
 				bookmark.food.name = food.getString("name");
 				bookmark.food.price = (float) food.getDouble("price");
 				bookmark.food.special = food.getBoolean("special");
 				bookmark.food.photo = food.getString("photo");
-				bookmark.shop.sid = food.getString("sid");
+				bookmark.shop.sid = sid;
 				bookmark.shop.name = food.getString("shopname");
 			}
 
