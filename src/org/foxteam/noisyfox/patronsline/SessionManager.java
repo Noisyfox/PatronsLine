@@ -138,6 +138,7 @@ public class SessionManager {
 			// 登陆成功
 			String uid = jsonObj.getString("uid");
 			String session = jsonObj.getString("session");
+			String name = jsonObj.getString("name");
 			int sex = jsonObj.getInt("sex");
 			int type = jsonObj.getInt("type");
 			String avatar = jsonObj.getString("avatar");
@@ -149,6 +150,7 @@ public class SessionManager {
 			tmpSession.uid = uid;
 			tmpSession.session = session;
 			tmpSession.user = tmpUser;
+			tmpUser.name = name;
 			tmpUser.sex = sex;
 			tmpUser.type = type;
 			tmpUser.avatar = avatar;
