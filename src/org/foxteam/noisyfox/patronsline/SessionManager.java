@@ -247,9 +247,7 @@ public class SessionManager {
 			switch (result) {
 			case 1:// OK
 				break;
-			case -1:// 失败
-				return ERROR_USER_LOGIN_FAILURE;
-			case 0:// 服务器错误
+			default:// 服务器错误
 				return ERROR_SERVER_FAILURE;
 			}
 
@@ -275,6 +273,86 @@ public class SessionManager {
 			}
 
 			return ERROR_OK;
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
+	}
+
+	public int bookmark_add(String id, boolean isFood) {
+		Map<Object, Object> params = new HashMap<Object, Object>();
+		params.put("method", "bookmark.add");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("id", id);
+		params.put("type", isFood ? "food" : "shop");
+
+		String response = NetworkHelper.doHttpRequest(
+				NetworkHelper.STR_SERVER_URL, params.entrySet());
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+
+			switch (result) {
+			case 1:// OK
+				return ERROR_OK;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
+	}
+
+	public int bookmark_delete(String id, boolean isFood) {
+		Map<Object, Object> params = new HashMap<Object, Object>();
+		params.put("method", "bookmark.delete");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("id", id);
+		params.put("type", isFood ? "food" : "shop");
+
+		String response = NetworkHelper.doHttpRequest(
+				NetworkHelper.STR_SERVER_URL, params.entrySet());
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+
+			switch (result) {
+			case 1:// OK
+				return ERROR_OK;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
 
 		} catch (JSONException e) {
 			e.printStackTrace();

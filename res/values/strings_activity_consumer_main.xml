@@ -7,4 +7,5 @@
     <string name="placeholder_food_price">价格</string>
     <string name="placeholder_food_price_change">涨价啦</string>
     <string name="error_refresh_failure">刷新收藏列表失败</string>
+    <string name="msg_bookmark_delete_success">已取消收藏</string>
 </resources>

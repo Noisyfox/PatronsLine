@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -216,6 +218,29 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 			textView_food_price.setText(food.price + "元");
 			textView_food_price_change.setText("");
 			toggleButton_star_is_bookmarked.setChecked(food.bookmark);
+			toggleButton_star_is_bookmarked.setTag(bookmarkFood);
+			toggleButton_star_is_bookmarked
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							if (!isChecked) {
+								if (SessionManager
+										.getSessionManager()
+										.bookmark_delete(
+												((InformationBookmarkFood) buttonView
+														.getTag()).bfid, true) == SessionManager.ERROR_OK) {
+									Toast.makeText(
+											getActivity(),
+											R.string.msg_bookmark_delete_success,
+											Toast.LENGTH_SHORT).show();
+									refreshData();
+								} else {
+									buttonView.setChecked(true);
+								}
+							}
+						}
+					});
 			if (food.photoBitmap == null) {
 				mPictureManager.getPicture(food.photo);
 				// 设置为空
