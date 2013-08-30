@@ -57,7 +57,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 		 * mFoods.add(food); mFoods.add(food); mFoods.add(food);
 		 */
 
-		mFoodAdapter = new FoodAdapter(getActivity());
+		mFoodAdapter = new FoodAdapter(getActivity(), getListView());
 		setListAdapter(mFoodAdapter);
 
 		if (!mDataRefreshed) {
@@ -92,6 +92,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 		InformationBookmarkFood bookmarkFood = (InformationBookmarkFood) v
 				.getTag();
 		Intent intent = new Intent();
+		intent.putExtra("fid", bookmarkFood.food.fid);
 		intent.setClass(getActivity(), ConsumerFoodDetailActivity.class);
 		startActivity(intent);
 	}
@@ -147,36 +148,13 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 	class FoodAdapter extends BaseAdapter {
 
+		private final ListView mListView;
 		private final LayoutInflater mInflater;
-		private PictureManager mPictureManager = new PictureManager();
-		private OnPictureGetListener mOnPictureGetListener = new OnPictureGetListener() {
-			@Override
-			public void onPictureGet(String pid, Bitmap pic) {
-				if (pic == null) {
-					return;
-				}
 
-				boolean shouldRefresh = false;
-				synchronized (mInformationSession.bookmarkFood) {
-					for (InformationBookmarkFood bookmarkFood : mInformationSession.bookmarkFood) {
-						InformationFood food = bookmarkFood.food;
-						if (food.photo.equals(pid)) {
-							food.photoBitmap = pic;
-							shouldRefresh = true;
-							break;
-						}
-					}
-				}
-				if (shouldRefresh) {
-					FoodAdapter.this.notifyDataSetChanged();
-				}
-			}
-		};
-
-		FoodAdapter(Context context) {
+		FoodAdapter(Context context, ListView listView) {
 			mInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			mPictureManager.setOnPictureGetListener(mOnPictureGetListener);
+			mListView = listView;
 		}
 
 		@Override
@@ -199,7 +177,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 			InformationBookmarkFood bookmarkFood = mInformationSession.bookmarkFood
 					.get(position);
-			InformationFood food = bookmarkFood.food;
+			final InformationFood food = bookmarkFood.food;
 
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.item_consumer_food,
@@ -208,7 +186,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 			convertView.setTag(bookmarkFood);
 
-			ImageView imageView_food = (ImageView) convertView
+			final ImageView imageView_food = (ImageView) convertView
 					.findViewById(R.id.imageView_food);
 			TextView textView_food_name = (TextView) convertView
 					.findViewById(R.id.textView_food_name);
@@ -280,6 +258,26 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 					});
 
 			if (food.photoBitmap == null) {
+				final String fid = food.fid;
+				imageView_food.setTag(fid);
+				PictureManager mPictureManager = new PictureManager();
+				mPictureManager
+						.setOnPictureGetListener(new OnPictureGetListener() {
+							@Override
+							public void onPictureGet(String pid,
+									final Bitmap pic) {
+								mListView.post(new Runnable() {
+									@Override
+									public void run() {
+										InformationManager
+												.obtainFoodInformation(fid).photoBitmap = pic;
+										ImageView imageViewByTag = (ImageView) mListView
+												.findViewWithTag(fid);
+										imageViewByTag.setImageBitmap(pic);
+									}
+								});
+							}
+						});
 				mPictureManager.getPicture(food.photo);
 				// 设置为空
 				imageView_food.setImageResource(R.drawable.pic_on_loading);
