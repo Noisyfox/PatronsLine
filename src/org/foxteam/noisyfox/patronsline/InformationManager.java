@@ -35,7 +35,7 @@ public class InformationManager {
 
 		InformationShop shop = null;
 
-		if (mFoodMap.containsKey(sid)) {
+		if (mShopMap.containsKey(sid)) {
 			shop = mShopMap.get(sid);
 		} else {
 			shop = new InformationShop();
