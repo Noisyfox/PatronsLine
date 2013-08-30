@@ -50,6 +50,11 @@
             android:name="org.foxteam.noisyfox.patronsline.RegisterActivity"
             android:label="@string/title_activity_register" >
         </activity>
+        <activity
+            android:name="org.foxteam.noisyfox.patronsline.ConsumerFoodDetailActivity"
+            android:label="@string/title_activity_consumer_food_detail"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_guide">GuideActivity</string>
-    <string name="title_activity_consumer_main">ConsumerMainActivity</string>
+    <string name="title_activity_consumer_main">Patrons Line</string>
+    <string name="title_activity_consumer_food_detail">查看菜肴</string>
 
 </resources>

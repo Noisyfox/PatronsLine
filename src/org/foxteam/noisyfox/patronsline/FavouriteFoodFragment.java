@@ -3,6 +3,7 @@ package org.foxteam.noisyfox.patronsline;
 import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -88,7 +89,11 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Log.d("msg", "onListItemClick");
-		super.onListItemClick(l, v, position, id);
+		InformationBookmarkFood bookmarkFood = (InformationBookmarkFood) v
+				.getTag();
+		Intent intent = new Intent();
+		intent.setClass(getActivity(), ConsumerFoodDetailActivity.class);
+		startActivity(intent);
 	}
 
 	private void refreshData() {
@@ -221,26 +226,59 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 			toggleButton_star_is_bookmarked.setTag(bookmarkFood);
 			toggleButton_star_is_bookmarked
 					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+						BookmarkDeleteTask mBookmarkDeleteTask = null;
+
 						@Override
 						public void onCheckedChanged(CompoundButton buttonView,
 								boolean isChecked) {
-							if (!isChecked) {
-								if (SessionManager
+							if (!isChecked && mBookmarkDeleteTask == null) {
+								mBookmarkDeleteTask = new BookmarkDeleteTask(
+										buttonView);
+								mBookmarkDeleteTask.execute();
+							}
+						}
+
+						class BookmarkDeleteTask extends
+								AsyncTask<Void, Void, Boolean> {
+							private final CompoundButton mButtonView;
+
+							BookmarkDeleteTask(CompoundButton buttonView) {
+								mButtonView = buttonView;
+							}
+
+							@Override
+							protected Boolean doInBackground(Void... params) {
+								return SessionManager
 										.getSessionManager()
 										.bookmark_delete(
-												((InformationBookmarkFood) buttonView
-														.getTag()).bfid, true) == SessionManager.ERROR_OK) {
+												((InformationBookmarkFood) mButtonView
+														.getTag()).bfid, true) == SessionManager.ERROR_OK;
+							}
+
+							@Override
+							protected void onPostExecute(Boolean result) {
+								if (result) {
 									Toast.makeText(
 											getActivity(),
 											R.string.msg_bookmark_delete_success,
 											Toast.LENGTH_SHORT).show();
+									mButtonView.setChecked(false);
 									refreshData();
 								} else {
-									buttonView.setChecked(true);
+									mButtonView.setChecked(true);
 								}
+								mBookmarkDeleteTask = null;
 							}
+
+							@Override
+							protected void onCancelled() {
+								mBookmarkDeleteTask = null;
+								mButtonView.setChecked(true);
+							}
+
 						}
 					});
+
 			if (food.photoBitmap == null) {
 				mPictureManager.getPicture(food.photo);
 				// 设置为空
