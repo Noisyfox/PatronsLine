@@ -363,6 +363,155 @@ public class SessionManager {
 		}
 	}
 
+	public int shop_detail(String sid) {
+		Map<Object, Object> params = new HashMap<Object, Object>();
+		params.put("method", "shop.detail");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("sid", sid);
+
+		String response = NetworkHelper.doHttpRequest(
+				NetworkHelper.STR_SERVER_URL, params.entrySet());
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+
+			switch (result) {
+			case 1:// OK
+				break;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+
+			String name = jsonObj.getString("name");
+			String address = jsonObj.getString("address");
+			String introduction = jsonObj.getString("introduction");
+			String photo = jsonObj.getString("photo");
+			String phonenum = jsonObj.getString("phonenum");
+			float mark = (float) jsonObj.getDouble("mark");
+			float popularity = (float) jsonObj.getDouble("popularity");
+			int user_mark = jsonObj.getInt("user_mark");
+
+			InformationShop shop = InformationManager
+					.obtainShopInformation(sid);
+			shop.name = name;
+			shop.address = address;
+			shop.introduction = introduction;
+			if (shop.photo != photo) {
+				shop.photoBitmap = null;
+			}
+			shop.photo = photo;
+			shop.phone_num = phonenum;
+			shop.mark = mark;
+			shop.popularity = popularity;
+			shop.user_mark = user_mark;
+
+			shop.foods.clear();
+
+			JSONArray foods = jsonObj.getJSONArray("foods");
+			for (int i = 0; i < foods.length(); i++) {
+				JSONObject food = foods.getJSONObject(i);
+				InformationFood f = analysisFoodDetail(food);
+				shop.foods.add(f);
+			}
+			return ERROR_OK;
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
+	}
+
+	private InformationFood analysisFoodDetail(JSONObject jsonObj)
+			throws JSONException {
+		String fid = jsonObj.getString("fid");
+		String name = jsonObj.getString("name");
+		float price = (float) jsonObj.getDouble("price");
+		boolean special = jsonObj.getBoolean("special");
+		String photo = jsonObj.getString("photo");
+		long likes = jsonObj.getLong("likes");
+		long dislikes = jsonObj.getLong("dislikes");
+		long comments = jsonObj.getLong("comments");
+		boolean bookmarked = jsonObj.getBoolean("bookmarked");
+
+		InformationFood food = InformationManager.obtainFoodInformation(fid);
+		food.fid = fid;
+		food.name = name;
+		food.price = price;
+		food.special = special;
+		if (food.photo != photo) {
+			food.photoBitmap = null;
+		}
+		food.photo = photo;
+		food.likes = likes;
+		food.dislikes = dislikes;
+		food.comments = comments;
+		food.bookmark = bookmarked;
+
+		return food;
+	}
+
+	public int food_detail(String fid) {
+		Map<Object, Object> params = new HashMap<Object, Object>();
+		params.put("method", "food.detail");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("fid", fid);
+
+		String response = NetworkHelper.doHttpRequest(
+				NetworkHelper.STR_SERVER_URL, params.entrySet());
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+
+			switch (result) {
+			case 1:// OK
+				break;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+
+			/*
+			 * 'result'=>1, 'fid'=>$fid, 'name'=>$name, 'price'=>(float)$price,
+			 * 'special'=>(bool)$special, 'photo'=>$photo, 'likes'=>$likes,
+			 * 'dislikes'=>$dislikes, 'comments'=>$comments,
+			 * 'bookmarked'=>(bool)$bookmarked
+			 */
+
+			analysisFoodDetail(jsonObj);
+
+			return ERROR_OK;
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
+	}
+
 	private static String hashString(String data, String algorithm) {
 		if (data == null)
 			return null;

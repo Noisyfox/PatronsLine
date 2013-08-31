@@ -93,6 +93,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 				.getTag();
 		Intent intent = new Intent();
 		intent.putExtra("fid", bookmarkFood.food.fid);
+		intent.putExtra("sid", bookmarkFood.shop.sid);
 		intent.setClass(getActivity(), ConsumerFoodDetailActivity.class);
 		startActivity(intent);
 	}

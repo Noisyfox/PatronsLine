@@ -1,5 +1,6 @@
 package org.foxteam.noisyfox.patronsline;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ public class InformationManager {
 		} else {
 			shop = new InformationShop();
 			shop.sid = sid;
+			shop.foods = new ArrayList<InformationFood>();
 			mShopMap.put(sid, shop);
 		}
 

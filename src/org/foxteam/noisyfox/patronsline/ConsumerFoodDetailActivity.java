@@ -1,15 +1,217 @@
 package org.foxteam.noisyfox.patronsline;
 
+import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
+
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class ConsumerFoodDetailActivity extends Activity {
+
+	private InformationFood mInformationFood = null;
+	private InformationShop mInformationShop = null;
+	private boolean isFromShop = false;
+
+	private BookmarkProcessTask mBookmarkProcessTack = null;
+	private boolean mLastBookmarked = false;
+
+	private View mFoodDeatilLoadView;
+	private View mFoodDetailView;
+
+	private Button mBackToShopView;
+	private ImageView mFoodImageView;
+	private TextView mFoodSpecialView;
+	private TextView mFoodNameView;
+	private TextView mFoodPriceView;
+	private ToggleButton mFoodBookmarkView;
+	private TextView mFoodLikesView;
+	private TextView mFoodDislikeView;
+	private TextView mFoodIntroView;
+	private ExpandableListView mFoodCommentsView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_consumer_food_detail);
+
+		mFoodDeatilLoadView = findViewById(R.id.food_detail_load_view);
+		mFoodDetailView = findViewById(R.id.food_detail_view);
+
+		mBackToShopView = (Button) findViewById(R.id.button_back_to_shop);
+		mFoodImageView = (ImageView) findViewById(R.id.imageView_food);
+		mFoodSpecialView = (TextView) findViewById(R.id.textView_food_special);
+		mFoodNameView = (TextView) findViewById(R.id.textView_food_name);
+		mFoodPriceView = (TextView) findViewById(R.id.textView_food_price);
+		mFoodBookmarkView = (ToggleButton) findViewById(R.id.toggleButton_food_bookmark);
+		mFoodLikesView = (TextView) findViewById(R.id.textView_food_likes);
+		mFoodDislikeView = (TextView) findViewById(R.id.textView_food_dislikes);
+		mFoodIntroView = (TextView) findViewById(R.id.textView_food_introduction);
+		mFoodCommentsView = (ExpandableListView) findViewById(R.id.expandableListView_comments);
+
+		isFromShop = getIntent().getBooleanExtra("fromShop", false);
+		String fid = getIntent().getStringExtra("fid");
+		String sid = getIntent().getStringExtra("sid");
+		mInformationFood = InformationManager.obtainFoodInformation(fid);
+		mInformationShop = InformationManager.obtainShopInformation(sid);
+
+		mFoodBookmarkView.setOnCheckedChangeListener(null);
+
+		showProgress(true);
+		new LoadFoodInformationTask().execute();
+	}
+
+	public class LoadFoodInformationTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			if (SessionManager.getSessionManager().food_detail(
+					mInformationFood.fid) != SessionManager.ERROR_OK) {
+				return false;
+			}
+			if (SessionManager.getSessionManager().shop_detail(
+					mInformationShop.sid) != SessionManager.ERROR_OK) {
+				return false;
+			}
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if (result) {
+				mBackToShopView.setText("<  " + mInformationShop.name);
+				if (isFromShop) {
+					mBackToShopView.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							finish();
+						}
+					});
+				} else {
+
+				}
+				if (mInformationFood.photoBitmap != null) {
+					mFoodImageView.setImageBitmap(mInformationFood.photoBitmap);
+				} else {
+					PictureManager pm = new PictureManager();
+					pm.setOnPictureGetListener(new OnPictureGetListener() {
+						@Override
+						public void onPictureGet(String pid, Bitmap pic) {
+							if (pid == mInformationFood.photo && pic != null) {
+								mInformationFood.photoBitmap = pic;
+								mFoodImageView
+										.setImageBitmap(mInformationFood.photoBitmap);
+							}
+						}
+					});
+					pm.getPicture(mInformationFood.photo);
+				}
+				mFoodSpecialView
+						.setVisibility(mInformationFood.special ? View.VISIBLE
+								: View.GONE);
+				mFoodNameView.setText(mInformationFood.name);
+				mFoodPriceView.setText(String.format("%.1f",
+						mInformationFood.price));
+				mLastBookmarked = mInformationFood.bookmark;
+				mFoodBookmarkView.setChecked(mInformationFood.bookmark);
+				mFoodBookmarkView
+						.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+							@Override
+							public void onCheckedChanged(
+									CompoundButton buttonView, boolean isChecked) {
+								if (mLastBookmarked == isChecked)
+									return;
+
+								if (mBookmarkProcessTack != null) {
+									return;
+								} else {
+									buttonView.setEnabled(false);
+									mBookmarkProcessTack = new BookmarkProcessTask();
+									mBookmarkProcessTack.execute(isChecked);
+								}
+							}
+						});
+				mFoodLikesView.setText(String.valueOf(mInformationFood.likes));
+				mFoodDislikeView.setText(String
+						.valueOf(mInformationFood.dislikes));
+				mFoodIntroView.setText(mInformationFood.introduction);
+				// mFoodCommentsView;
+				showProgress(false);
+			}
+		}
+
+	}
+
+	class BookmarkProcessTask extends AsyncTask<Boolean, Void, Boolean> {
+		boolean add = false;
+
+		@Override
+		protected Boolean doInBackground(Boolean... params) {
+			add = params[0];
+			int result = 0;
+			if (add) {
+				result = SessionManager.getSessionManager().bookmark_add(
+						mInformationFood.fid, true);
+			} else {
+				InformationBookmarkFood bmff = null;
+				if (SessionManager.getCurrentSession().bookmarkFood.isEmpty()) {
+					if (SessionManager.getSessionManager().bookmark_list_food() != SessionManager.ERROR_OK) {
+						return false;
+					} else {
+						if (SessionManager.getCurrentSession().bookmarkFood
+								.isEmpty()) {
+							return true;
+						}
+					}
+				}
+				for (InformationBookmarkFood bmf : SessionManager
+						.getCurrentSession().bookmarkFood) {
+					if (bmf.food.fid == mInformationFood.fid) {
+						bmff = bmf;
+						break;
+					}
+				}
+				if (bmff == null) {
+					return true;
+				}
+				SessionManager.getCurrentSession().bookmarkFood.remove(bmff);
+				result = SessionManager.getSessionManager().bookmark_delete(
+						bmff.bfid, true);
+			}
+			return result == SessionManager.ERROR_OK;
+		}
+
+		@Override
+		protected void onCancelled() {
+			mFoodBookmarkView.setEnabled(true);
+			mBookmarkProcessTack = null;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if (result) {
+				mLastBookmarked = add;
+			} else {
+				mFoodBookmarkView.setChecked(mLastBookmarked);
+			}
+			mFoodBookmarkView.setEnabled(true);
+			mBookmarkProcessTack = null;
+		}
+
 	}
 
 	@Override
@@ -17,6 +219,48 @@ public class ConsumerFoodDetailActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.consumer_food_detail, menu);
 		return true;
+	}
+
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private void showProgress(final boolean show) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int shortAnimTime = getResources().getInteger(
+					android.R.integer.config_shortAnimTime);
+
+			mFoodDeatilLoadView.setVisibility(View.VISIBLE);
+			mFoodDeatilLoadView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mFoodDeatilLoadView
+									.setVisibility(show ? View.VISIBLE
+											: View.GONE);
+						}
+					});
+
+			mFoodDetailView.setVisibility(View.VISIBLE);
+			mFoodDetailView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 0 : 1)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mFoodDetailView.setVisibility(show ? View.GONE
+									: View.VISIBLE);
+						}
+					});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			mFoodDeatilLoadView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mFoodDetailView.setVisibility(show ? View.GONE : View.VISIBLE);
+		}
 	}
 
 }
