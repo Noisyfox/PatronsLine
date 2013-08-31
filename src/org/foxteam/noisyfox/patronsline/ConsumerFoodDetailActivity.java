@@ -20,6 +20,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class ConsumerFoodDetailActivity extends Activity {
@@ -210,8 +211,20 @@ public class ConsumerFoodDetailActivity extends Activity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
+				Toast.makeText(
+						getApplication(),
+						add ? R.string.information_bookmark_food_add_success
+								: R.string.information_bookmark_food_delete_success,
+						Toast.LENGTH_SHORT).show();
+
 				mLastBookmarked = add;
 			} else {
+				Toast.makeText(
+						getApplication(),
+						add ? R.string.information_bookmark_food_add_failure
+								: R.string.information_bookmark_food_delete_failure,
+						Toast.LENGTH_SHORT).show();
+
 				mFoodBookmarkView.setChecked(mLastBookmarked);
 			}
 			mFoodBookmarkView.setEnabled(true);
