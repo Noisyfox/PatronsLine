@@ -10,6 +10,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -148,7 +149,12 @@ public class ConsumerFoodDetailActivity extends Activity {
 				mFoodLikesView.setText(String.valueOf(mInformationFood.likes));
 				mFoodDislikeView.setText(String
 						.valueOf(mInformationFood.dislikes));
-				mFoodIntroView.setText(mInformationFood.introduction);
+				if (TextUtils.isEmpty(mInformationFood.introduction)) {
+					mFoodIntroView
+							.setText(R.string.information_no_introduction);
+				} else {
+					mFoodIntroView.setText(mInformationFood.introduction);
+				}
 				// mFoodCommentsView;
 				showProgress(false);
 			}

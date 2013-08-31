@@ -10,4 +10,5 @@
     <string name="lable_view_comments">评论:</string>
     <string name="lable_yuan">￥</string>
     <string name="lable_loading">正在努力加载中~</string>
+    <string name="information_no_introduction">店主有点偷懒哟，没有写任何介绍~</string>
 </resources>
