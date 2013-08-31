@@ -3,7 +3,6 @@ package org.foxteam.noisyfox.patronsline;
 import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,21 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class FavouriteFoodFragment extends SherlockListFragment {
+public class FavouriteShopFragment extends SherlockListFragment {
 
-	FoodAdapter mFoodAdapter = null;
+	ShopAdapter mShopAdapter = null;
 	private GetBookmarkTask mGetBookmarkTask = null;
 
 	InformationSession mInformationSession = null;
@@ -40,11 +39,11 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 		mInformationSession = SessionManager.getCurrentSession();
 
-		setEmptyText(getText(R.string.empty_text_no_favourite_food));
+		setEmptyText(getText(R.string.empty_text_no_favourite_shop));
 		setHasOptionsMenu(true);
 
-		mFoodAdapter = new FoodAdapter(getActivity(), getListView());
-		setListAdapter(mFoodAdapter);
+		mShopAdapter = new ShopAdapter(getActivity(), getListView());
+		setListAdapter(mShopAdapter);
 
 		if (!mDataRefreshed) {
 			mDataRefreshed = true;
@@ -75,13 +74,6 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Log.d("msg", "onListItemClick");
-		InformationBookmarkFood bookmarkFood = (InformationBookmarkFood) v
-				.getTag();
-		Intent intent = new Intent();
-		intent.putExtra("fid", bookmarkFood.food.fid);
-		intent.putExtra("sid", bookmarkFood.shop.sid);
-		intent.setClass(getActivity(), ConsumerFoodDetailActivity.class);
-		startActivity(intent);
 	}
 
 	private void refreshData() {
@@ -103,7 +95,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			errCode = SessionManager.getSessionManager().bookmark_list_food();
+			errCode = SessionManager.getSessionManager().bookmark_list_shop();
 
 			return null;
 		}
@@ -111,7 +103,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			if (errCode == SessionManager.ERROR_OK) {
-				mFoodAdapter.notifyDataSetChanged();
+				mShopAdapter.notifyDataSetChanged();
 
 				// The list should now be shown.
 				if (isResumed()) {
@@ -133,12 +125,12 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 	}
 
-	class FoodAdapter extends BaseAdapter {
+	class ShopAdapter extends BaseAdapter {
 
 		private final ListView mListView;
 		private final LayoutInflater mInflater;
 
-		FoodAdapter(Context context, ListView listView) {
+		ShopAdapter(Context context, ListView listView) {
 			mInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			mListView = listView;
@@ -146,12 +138,12 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 		@Override
 		public int getCount() {
-			return mInformationSession.bookmarkFood.size();
+			return mInformationSession.bookmarkShop.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return mInformationSession.bookmarkFood.get(position);
+			return mInformationSession.bookmarkShop.get(position);
 		}
 
 		@Override
@@ -161,34 +153,28 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-
-			InformationBookmarkFood bookmarkFood = mInformationSession.bookmarkFood
+			InformationBookmarkShop bookmarkShop = mInformationSession.bookmarkShop
 					.get(position);
-			final InformationFood food = bookmarkFood.food;
+			final InformationShop shop = bookmarkShop.shop;
 
 			if (convertView == null) {
-				convertView = mInflater.inflate(R.layout.item_consumer_food,
+				convertView = mInflater.inflate(R.layout.item_consumer_shop,
 						parent, false);
 			}
 
-			convertView.setTag(bookmarkFood);
+			convertView.setTag(bookmarkShop);
 
-			final ImageView imageView_food = (ImageView) convertView
-					.findViewById(R.id.imageView_food);
-			TextView textView_food_name = (TextView) convertView
-					.findViewById(R.id.textView_food_name);
-			TextView textView_food_price = (TextView) convertView
-					.findViewById(R.id.textView_food_price);
-			TextView textView_food_price_change = (TextView) convertView
-					.findViewById(R.id.textView_food_price_change);
+			final ImageView imageView_shop = (ImageView) convertView
+					.findViewById(R.id.imageView_shop);
+			TextView textView_shop_name = (TextView) convertView
+					.findViewById(R.id.textView_shop_name);
 			ToggleButton toggleButton_star_is_bookmarked = (ToggleButton) convertView
 					.findViewById(R.id.toggleButton_star_is_bookmarked);
 
-			textView_food_name.setText(food.name);
-			textView_food_price.setText(food.price + "元");
-			textView_food_price_change.setText("");
-			toggleButton_star_is_bookmarked.setChecked(food.bookmark);
-			toggleButton_star_is_bookmarked.setTag(bookmarkFood);
+			textView_shop_name.setText(shop.name);
+			toggleButton_star_is_bookmarked.setChecked(shop.bookmark);
+			toggleButton_star_is_bookmarked.setTag(bookmarkShop);
+
 			toggleButton_star_is_bookmarked
 					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 						BookmarkDeleteTask mBookmarkDeleteTask = null;
@@ -216,8 +202,8 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 								return SessionManager
 										.getSessionManager()
 										.bookmark_delete(
-												((InformationBookmarkFood) mButtonView
-														.getTag()).bfid, true) == SessionManager.ERROR_OK;
+												((InformationBookmarkShop) mButtonView
+														.getTag()).bsid, false) == SessionManager.ERROR_OK;
 							}
 
 							@Override
@@ -244,9 +230,9 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 						}
 					});
 
-			if (food.photoBitmap == null) {
-				final String fid = food.fid;
-				imageView_food.setTag(fid);
+			if (shop.photoBitmap == null) {
+				final String sid = shop.sid;
+				imageView_shop.setTag(sid);
 				PictureManager mPictureManager = new PictureManager();
 				mPictureManager
 						.setOnPictureGetListener(new OnPictureGetListener() {
@@ -257,9 +243,9 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 									@Override
 									public void run() {
 										InformationManager
-												.obtainFoodInformation(fid).photoBitmap = pic;
+												.obtainShopInformation(sid).photoBitmap = pic;
 										ImageView imageViewByTag = (ImageView) mListView
-												.findViewWithTag(fid);
+												.findViewWithTag(sid);
 										if (imageViewByTag != null) {
 											imageViewByTag.setImageBitmap(pic);
 										}
@@ -267,16 +253,14 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 								});
 							}
 						});
-				mPictureManager.getPicture(food.photo);
+				mPictureManager.getPicture(shop.photo);
 				// 设置为空
-				imageView_food.setImageResource(R.drawable.pic_on_loading);
+				imageView_shop.setImageResource(R.drawable.pic_on_loading);
 			} else {
-				imageView_food.setImageBitmap(food.photoBitmap);
+				imageView_shop.setImageBitmap(shop.photoBitmap);
 			}
 
 			return convertView;
 		}
-
 	}
-
 }
