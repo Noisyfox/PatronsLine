@@ -273,7 +273,9 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 												.obtainFoodInformation(fid).photoBitmap = pic;
 										ImageView imageViewByTag = (ImageView) mListView
 												.findViewWithTag(fid);
-										imageViewByTag.setImageBitmap(pic);
+										if (imageViewByTag != null) {
+											imageViewByTag.setImageBitmap(pic);
+										}
 									}
 								});
 							}
