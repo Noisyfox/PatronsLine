@@ -75,7 +75,8 @@ public class RegisterActivity extends Activity {
 		mRregionView = (EditText) findViewById(R.id.region);
 		mShopOwnerView = (CheckBox) findViewById(R.id.checkBox_shop_owner);
 
-		mAvatar = BitmapFactory.decodeResource(getResources(), R.drawable.head);
+		mAvatar = BitmapFactory.decodeResource(getResources(),
+				R.drawable.avatar_empty);
 		mAvatarVeiw.setImageBitmap(mAvatar);
 
 		findViewById(R.id.register_button).setOnClickListener(
