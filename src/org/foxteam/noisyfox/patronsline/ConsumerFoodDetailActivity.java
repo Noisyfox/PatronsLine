@@ -9,6 +9,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -104,7 +105,16 @@ public class ConsumerFoodDetailActivity extends Activity {
 						}
 					});
 				} else {
-
+					mBackToShopView.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent();
+							intent.putExtra("sid", mInformationShop.sid);
+							intent.setClass(ConsumerFoodDetailActivity.this,
+									ConsumerShopDetailActivity.class);
+							startActivity(intent);
+						}
+					});
 				}
 				if (mInformationFood.photoBitmap != null) {
 					mFoodImageView.setImageBitmap(mInformationFood.photoBitmap);

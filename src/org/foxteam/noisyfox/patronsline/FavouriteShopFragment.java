@@ -3,6 +3,7 @@ package org.foxteam.noisyfox.patronsline;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,7 +34,7 @@ public class FavouriteShopFragment extends SherlockListFragment {
 		setEmptyText(getText(R.string.empty_text_no_favourite_shop));
 		setHasOptionsMenu(true);
 
-		mShopAdapter = new UserShopAdapter(getActivity(), getListView()){
+		mShopAdapter = new UserShopAdapter(getActivity(), getListView()) {
 
 			@Override
 			public boolean onBookmarkShopChange(InformationShop shop,
@@ -64,13 +65,13 @@ public class FavouriteShopFragment extends SherlockListFragment {
 						return true;
 					}
 					mInformationSession.bookmarkShop.remove(bmsf);
-					Log.d("","delete:" + bmsf.bsid);
+					Log.d("", "delete:" + bmsf.bsid);
 					result = SessionManager.getSessionManager()
 							.bookmark_delete(bmsf.bsid, false);
 				}
 				return result == SessionManager.ERROR_OK;
 			}
-			
+
 		};
 		loadData();
 		setListAdapter(mShopAdapter);
@@ -89,7 +90,7 @@ public class FavouriteShopFragment extends SherlockListFragment {
 		}
 		mShopAdapter.setData(mShops);
 	}
-	
+
 	MenuItem mItem_refresh = null;
 
 	@Override
@@ -112,6 +113,12 @@ public class FavouriteShopFragment extends SherlockListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Log.d("msg", "onListItemClick");
+
+		InformationShop informationShop = (InformationShop) v.getTag();
+		Intent intent = new Intent();
+		intent.putExtra("sid", informationShop.sid);
+		intent.setClass(getActivity(), ConsumerShopDetailActivity.class);
+		startActivity(intent);
 	}
 
 	private void refreshData() {

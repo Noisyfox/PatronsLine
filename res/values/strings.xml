@@ -7,5 +7,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_guide">GuideActivity</string>
     <string name="title_activity_consumer_main">Patrons Line</string>
+    <string name="title_activity_consumer_shop_detail">ConsumerShopDetailActivity</string>
 
 </resources>
