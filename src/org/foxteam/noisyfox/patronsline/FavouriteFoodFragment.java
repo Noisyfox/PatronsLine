@@ -1,5 +1,8 @@
 package org.foxteam.noisyfox.patronsline;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +21,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 	private GetBookmarkTask mGetBookmarkTask = null;
 
 	InformationSession mInformationSession = null;
+	private List<InformationFood> mFoods = new ArrayList<InformationFood>();
 	private boolean mDataRefreshed = false;
 
 	@Override
@@ -30,7 +34,44 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 		setEmptyText(getText(R.string.empty_text_no_favourite_food));
 		setHasOptionsMenu(true);
 
-		mFoodAdapter = new UserFoodAdapter(getActivity(), getListView());
+		mFoodAdapter = new UserFoodAdapter(getActivity(), getListView()) {
+			@Override
+			public boolean onBookmarkFoodChange(InformationFood food,
+					boolean addBookmark) {
+				int result = 0;
+				if (addBookmark) {
+					result = SessionManager.getSessionManager().bookmark_add(
+							food.fid, true);
+				} else {
+					InformationBookmarkFood bmff = null;
+					if (mInformationSession.bookmarkFood.isEmpty()) {
+						if (SessionManager.getSessionManager()
+								.bookmark_list_food() != SessionManager.ERROR_OK) {
+							return false;
+						} else {
+							if (mInformationSession.bookmarkFood.isEmpty()) {
+								return true;
+							}
+						}
+					}
+					for (InformationBookmarkFood bmf : mInformationSession.bookmarkFood) {
+						if (bmf.food.fid == food.fid) {
+							bmff = bmf;
+							break;
+						}
+					}
+					if (bmff == null) {
+						return true;
+					}
+					mInformationSession.bookmarkFood.remove(bmff);
+					Log.d("","delete:" + bmff.bfid);
+					result = SessionManager.getSessionManager()
+							.bookmark_delete(bmff.bfid, true);
+				}
+				return result == SessionManager.ERROR_OK;
+			}
+		};
+		loadData();
 		setListAdapter(mFoodAdapter);
 
 		if (!mDataRefreshed) {
@@ -38,6 +79,14 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 			refreshData();
 		}
 
+	}
+
+	private void loadData() {
+		mFoods.clear();
+		for (InformationBookmarkFood ibf : mInformationSession.bookmarkFood) {
+			mFoods.add(ibf.food);
+		}
+		mFoodAdapter.setData(mFoods);
 	}
 
 	MenuItem mItem_refresh = null;
@@ -62,11 +111,9 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Log.d("msg", "onListItemClick");
-		InformationBookmarkFood bookmarkFood = (InformationBookmarkFood) v
-				.getTag();
+		InformationFood informationFood = (InformationFood) v.getTag();
 		Intent intent = new Intent();
-		intent.putExtra("fid", bookmarkFood.food.fid);
-		intent.putExtra("sid", bookmarkFood.shop.sid);
+		intent.putExtra("fid", informationFood.fid);
 		intent.setClass(getActivity(), ConsumerFoodDetailActivity.class);
 		startActivity(intent);
 	}
@@ -98,7 +145,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			if (errCode == SessionManager.ERROR_OK) {
-				mFoodAdapter.notifyDataSetChanged();
+				loadData();
 
 				// The list should now be shown.
 				if (isResumed()) {

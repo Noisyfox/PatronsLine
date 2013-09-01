@@ -67,9 +67,9 @@ public class ConsumerFoodDetailActivity extends Activity {
 
 		isFromShop = getIntent().getBooleanExtra("fromShop", false);
 		String fid = getIntent().getStringExtra("fid");
-		String sid = getIntent().getStringExtra("sid");
 		mInformationFood = InformationManager.obtainFoodInformation(fid);
-		mInformationShop = InformationManager.obtainShopInformation(sid);
+		mInformationShop = InformationManager
+				.obtainShopInformation(mInformationFood.sid);
 
 		mFoodBookmarkView.setOnCheckedChangeListener(null);
 

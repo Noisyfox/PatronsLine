@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 public class InformationFood {
 
 	String fid;
+	String sid; 
 	String name;
 	String introduction;
 	boolean bookmark;

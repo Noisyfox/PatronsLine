@@ -1,5 +1,7 @@
 package org.foxteam.noisyfox.patronsline;
 
+import java.util.List;
+
 import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
 
 import android.content.Context;
@@ -21,25 +23,38 @@ class UserShopAdapter extends BaseAdapter {
 
 	private final ListView mListView;
 	private final LayoutInflater mInflater;
-	private final InformationSession mInformationSession;
 	private final Context mContext;
+
+	private List<InformationShop> mData;
 
 	UserShopAdapter(Context context, ListView listView) {
 		mContext = context;
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mListView = listView;
-		mInformationSession = SessionManager.getCurrentSession();
+	}
+
+	public void setData(List<InformationShop> data) {
+		mData = data;
+		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return mInformationSession.bookmarkShop.size();
+		if (mData == null) {
+			return 0;
+		} else {
+			return mData.size();
+		}
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mInformationSession.bookmarkShop.get(position);
+		if (mData == null) {
+			return null;
+		} else {
+			return mData.get(position);
+		}
 	}
 
 	@Override
@@ -47,18 +62,70 @@ class UserShopAdapter extends BaseAdapter {
 		return position;
 	}
 
+	private class MyOnCheckedChangeListener implements OnCheckedChangeListener {
+
+		private boolean mLstChecked;
+
+		MyOnCheckedChangeListener(boolean isChecked) {
+			mLstChecked = isChecked;
+		}
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			if (mLstChecked == isChecked)
+				return;
+			buttonView.setEnabled(false);
+			new BookmarkChangeTask(buttonView, isChecked).execute();
+		}
+
+		class BookmarkChangeTask extends AsyncTask<Void, Void, Boolean> {
+			CompoundButton mButtonView;
+			boolean mIsChecked;
+
+			BookmarkChangeTask(CompoundButton buttonView, boolean isChecked) {
+				mButtonView = buttonView;
+				mIsChecked = isChecked;
+			}
+
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				return onBookmarkShopChange(
+						(InformationShop) mButtonView.getTag(), mIsChecked);
+			}
+
+			@Override
+			protected void onPostExecute(Boolean result) {
+				if (result) {
+					mLstChecked = mIsChecked;
+					Toast.makeText(
+							mContext,
+							mIsChecked ? R.string.information_bookmark_food_add_success
+									: R.string.information_bookmark_food_delete_success,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					mButtonView.setChecked(mLstChecked);
+					Toast.makeText(
+							mContext,
+							mIsChecked ? R.string.information_bookmark_food_add_failure
+									: R.string.information_bookmark_food_delete_failure,
+							Toast.LENGTH_SHORT).show();
+				}
+				mButtonView.setEnabled(true);
+			}
+		}
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		InformationBookmarkShop bookmarkShop = mInformationSession.bookmarkShop
-				.get(position);
-		final InformationShop shop = bookmarkShop.shop;
+		final InformationShop shop = mData.get(position);
 
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.item_consumer_shop,
 					parent, false);
 		}
 
-		convertView.setTag(bookmarkShop);
+		convertView.setTag(shop);
 
 		final ImageView imageView_shop = (ImageView) convertView
 				.findViewById(R.id.imageView_shop);
@@ -68,11 +135,10 @@ class UserShopAdapter extends BaseAdapter {
 				.findViewById(R.id.toggleButton_star_is_bookmarked);
 
 		textView_shop_name.setText(shop.name);
-		toggleButton_star_is_bookmarked.setChecked(shop.bookmark);
-		toggleButton_star_is_bookmarked.setTag(bookmarkShop);
 
 		toggleButton_star_is_bookmarked
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				.setOnCheckedChangeListener(new MyOnCheckedChangeListener(shop.bookmark) /*{
+					
 					BookmarkDeleteTask mBookmarkDeleteTask = null;
 
 					@Override
@@ -126,7 +192,11 @@ class UserShopAdapter extends BaseAdapter {
 						}
 
 					}
-				});
+					
+				}*/);
+
+		toggleButton_star_is_bookmarked.setChecked(shop.bookmark);
+		toggleButton_star_is_bookmarked.setTag(shop);
 
 		if (shop.photoBitmap == null) {
 			final String sid = shop.sid;
@@ -156,5 +226,10 @@ class UserShopAdapter extends BaseAdapter {
 		}
 
 		return convertView;
+	}
+
+	public boolean onBookmarkShopChange(InformationShop shop,
+			boolean addBookmark) {
+		return true;
 	}
 }

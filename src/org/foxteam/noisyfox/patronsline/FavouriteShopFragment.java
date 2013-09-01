@@ -1,5 +1,8 @@
 package org.foxteam.noisyfox.patronsline;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +20,7 @@ public class FavouriteShopFragment extends SherlockListFragment {
 	private GetBookmarkTask mGetBookmarkTask = null;
 
 	InformationSession mInformationSession = null;
+	private List<InformationShop> mShops = new ArrayList<InformationShop>();
 	private boolean mDataRefreshed = false;
 
 	@Override
@@ -29,7 +33,46 @@ public class FavouriteShopFragment extends SherlockListFragment {
 		setEmptyText(getText(R.string.empty_text_no_favourite_shop));
 		setHasOptionsMenu(true);
 
-		mShopAdapter = new UserShopAdapter(getActivity(), getListView());
+		mShopAdapter = new UserShopAdapter(getActivity(), getListView()){
+
+			@Override
+			public boolean onBookmarkShopChange(InformationShop shop,
+					boolean addBookmark) {
+				int result = 0;
+				if (addBookmark) {
+					result = SessionManager.getSessionManager().bookmark_add(
+							shop.sid, false);
+				} else {
+					InformationBookmarkShop bmsf = null;
+					if (mInformationSession.bookmarkFood.isEmpty()) {
+						if (SessionManager.getSessionManager()
+								.bookmark_list_shop() != SessionManager.ERROR_OK) {
+							return false;
+						} else {
+							if (mInformationSession.bookmarkShop.isEmpty()) {
+								return true;
+							}
+						}
+					}
+					for (InformationBookmarkShop bms : mInformationSession.bookmarkShop) {
+						if (bms.shop.sid == shop.sid) {
+							bmsf = bms;
+							break;
+						}
+					}
+					if (bmsf == null) {
+						return true;
+					}
+					mInformationSession.bookmarkShop.remove(bmsf);
+					Log.d("","delete:" + bmsf.bsid);
+					result = SessionManager.getSessionManager()
+							.bookmark_delete(bmsf.bsid, false);
+				}
+				return result == SessionManager.ERROR_OK;
+			}
+			
+		};
+		loadData();
 		setListAdapter(mShopAdapter);
 
 		if (!mDataRefreshed) {
@@ -39,6 +82,14 @@ public class FavouriteShopFragment extends SherlockListFragment {
 
 	}
 
+	private void loadData() {
+		mShops.clear();
+		for (InformationBookmarkShop ibs : mInformationSession.bookmarkShop) {
+			mShops.add(ibs.shop);
+		}
+		mShopAdapter.setData(mShops);
+	}
+	
 	MenuItem mItem_refresh = null;
 
 	@Override
@@ -90,7 +141,7 @@ public class FavouriteShopFragment extends SherlockListFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			if (errCode == SessionManager.ERROR_OK) {
-				mShopAdapter.notifyDataSetChanged();
+				loadData();
 
 				// The list should now be shown.
 				if (isResumed()) {

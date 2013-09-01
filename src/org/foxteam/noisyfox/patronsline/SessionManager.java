@@ -266,6 +266,7 @@ public class SessionManager {
 
 				bookmark.bfid = food.getString("id");
 				bookmark.food.fid = fid;
+				bookmark.food.sid = sid;
 				bookmark.food.name = food.getString("name");
 				bookmark.food.price = (float) food.getDouble("price");
 				bookmark.food.special = food.getBoolean("special");
@@ -506,6 +507,7 @@ public class SessionManager {
 	private InformationFood analysisFoodDetail(JSONObject jsonObj)
 			throws JSONException {
 		String fid = jsonObj.getString("fid");
+		String sid = jsonObj.getString("sid");
 		String name = jsonObj.getString("name");
 		float price = (float) jsonObj.getDouble("price");
 		boolean special = jsonObj.getBoolean("special");
@@ -517,6 +519,7 @@ public class SessionManager {
 
 		InformationFood food = InformationManager.obtainFoodInformation(fid);
 		food.fid = fid;
+		food.sid = sid;
 		food.name = name;
 		food.price = price;
 		food.special = special;

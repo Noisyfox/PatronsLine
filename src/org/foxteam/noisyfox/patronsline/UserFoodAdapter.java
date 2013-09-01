@@ -1,5 +1,7 @@
 package org.foxteam.noisyfox.patronsline;
 
+import java.util.List;
+
 import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
 
 import android.content.Context;
@@ -21,25 +23,38 @@ class UserFoodAdapter extends BaseAdapter {
 
 	private final ListView mListView;
 	private final LayoutInflater mInflater;
-	private final InformationSession mInformationSession;
 	private final Context mContext;
+
+	private List<InformationFood> mData;
 
 	UserFoodAdapter(Context context, ListView listView) {
 		mContext = context;
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mListView = listView;
-		mInformationSession = SessionManager.getCurrentSession();
+	}
+
+	public void setData(List<InformationFood> data) {
+		mData = data;
+		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return mInformationSession.bookmarkFood.size();
+		if (mData == null) {
+			return 0;
+		} else {
+			return mData.size();
+		}
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mInformationSession.bookmarkFood.get(position);
+		if (mData == null) {
+			return null;
+		} else {
+			return mData.get(position);
+		}
 	}
 
 	@Override
@@ -47,19 +62,74 @@ class UserFoodAdapter extends BaseAdapter {
 		return position;
 	}
 
+	private class MyOnCheckedChangeListener implements OnCheckedChangeListener {
+
+		private boolean mLstChecked;
+
+		MyOnCheckedChangeListener(boolean isChecked) {
+			mLstChecked = isChecked;
+		}
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			if (mLstChecked == isChecked)
+				return;
+			buttonView.setEnabled(false);
+			new BookmarkChangeTask(buttonView, isChecked).execute();
+		}
+
+		class BookmarkChangeTask extends AsyncTask<Void, Void, Boolean> {
+			CompoundButton mButtonView;
+			boolean mIsChecked;
+
+			BookmarkChangeTask(CompoundButton buttonView, boolean isChecked) {
+				mButtonView = buttonView;
+				mIsChecked = isChecked;
+			}
+
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				return onBookmarkFoodChange(
+						(InformationFood) mButtonView.getTag(), mIsChecked);
+			}
+
+			@Override
+			protected void onPostExecute(Boolean result) {
+				if (result) {
+					mLstChecked = mIsChecked;
+					Toast.makeText(
+							mContext,
+							mIsChecked ? R.string.information_bookmark_food_add_success
+									: R.string.information_bookmark_food_delete_success,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					mButtonView.setChecked(mLstChecked);
+					Toast.makeText(
+							mContext,
+							mIsChecked ? R.string.information_bookmark_food_add_failure
+									: R.string.information_bookmark_food_delete_failure,
+							Toast.LENGTH_SHORT).show();
+				}
+				mButtonView.setEnabled(true);
+			}
+		}
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		InformationBookmarkFood bookmarkFood = mInformationSession.bookmarkFood
-				.get(position);
-		final InformationFood food = bookmarkFood.food;
+		// InformationBookmarkFood bookmarkFood =
+		// mInformationSession.bookmarkFood
+		// .get(position);
+		final InformationFood food = mData.get(position);
 
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.item_consumer_food,
 					parent, false);
 		}
 
-		convertView.setTag(bookmarkFood);
+		convertView.setTag(food);
 
 		final ImageView imageView_food = (ImageView) convertView
 				.findViewById(R.id.imageView_food);
@@ -75,64 +145,12 @@ class UserFoodAdapter extends BaseAdapter {
 		textView_food_name.setText(food.name);
 		textView_food_price.setText(food.price + "元");
 		textView_food_price_change.setText("");
-		toggleButton_star_is_bookmarked.setChecked(food.bookmark);
-		toggleButton_star_is_bookmarked.setTag(bookmarkFood);
 		toggleButton_star_is_bookmarked
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-					BookmarkDeleteTask mBookmarkDeleteTask = null;
-
-					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						if (!isChecked && mBookmarkDeleteTask == null) {
-							mBookmarkDeleteTask = new BookmarkDeleteTask(
-									buttonView);
-							mBookmarkDeleteTask.execute();
-						}
-					}
-
-					class BookmarkDeleteTask extends
-							AsyncTask<Void, Void, Boolean> {
-						private final CompoundButton mButtonView;
-
-						BookmarkDeleteTask(CompoundButton buttonView) {
-							mButtonView = buttonView;
-						}
-
-						@Override
-						protected Boolean doInBackground(Void... params) {
-							return SessionManager
-									.getSessionManager()
-									.bookmark_delete(
-											((InformationBookmarkFood) mButtonView
-													.getTag()).bfid, true) == SessionManager.ERROR_OK;
-						}
-
-						@Override
-						protected void onPostExecute(Boolean result) {
-							if (result) {
-								Toast.makeText(mContext,
-										R.string.msg_bookmark_delete_success,
-										Toast.LENGTH_SHORT).show();
-								mButtonView.setChecked(false);
-								mInformationSession.bookmarkFood
-										.remove((InformationBookmarkFood) mButtonView
-												.getTag());
-								notifyDataSetChanged();
-							} else {
-								mButtonView.setChecked(true);
-							}
-							mBookmarkDeleteTask = null;
-						}
-
-						@Override
-						protected void onCancelled() {
-							mBookmarkDeleteTask = null;
-							mButtonView.setChecked(true);
-						}
-
-					}
-				});
+				.setOnCheckedChangeListener(new MyOnCheckedChangeListener(
+						food.bookmark));
+		toggleButton_star_is_bookmarked.setChecked(food.bookmark);
+		toggleButton_star_is_bookmarked.setEnabled(true);
+		toggleButton_star_is_bookmarked.setTag(food);
 
 		if (food.photoBitmap == null) {
 			final String fid = food.fid;
@@ -164,4 +182,8 @@ class UserFoodAdapter extends BaseAdapter {
 		return convertView;
 	}
 
+	public boolean onBookmarkFoodChange(InformationFood food,
+			boolean addBookmark) {
+		return true;
+	}
 }
