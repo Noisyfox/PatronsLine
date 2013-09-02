@@ -133,7 +133,7 @@ class UserFoodAdapter extends BaseAdapter {
 		// .get(position);
 		final InformationFood food = mData.get(position);
 
-		if (convertView == null) {
+		if (convertView == null || convertView.getTag() == null) {
 			convertView = mInflater.inflate(R.layout.item_consumer_food,
 					parent, false);
 		}

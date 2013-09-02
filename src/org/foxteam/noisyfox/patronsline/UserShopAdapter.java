@@ -129,7 +129,7 @@ class UserShopAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final InformationShop shop = mData.get(position);
 
-		if (convertView == null) {
+		if (convertView == null || convertView.getTag() == null) {
 			convertView = mInflater.inflate(R.layout.item_consumer_shop,
 					parent, false);
 		}
