@@ -1,5 +1,6 @@
 package org.foxteam.noisyfox.patronsline;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
@@ -26,7 +27,7 @@ class UserFoodAdapter extends BaseAdapter {
 	private final LayoutInflater mInflater;
 	private final Context mContext;
 
-	private List<InformationFood> mData;
+	private List<InformationFood> mData = new ArrayList<InformationFood>();
 
 	UserFoodAdapter(Context context, ListView listView) {
 		mContext = context;
@@ -36,7 +37,10 @@ class UserFoodAdapter extends BaseAdapter {
 	}
 
 	public void setData(List<InformationFood> data) {
-		mData = data;
+		mData.clear();
+		for (InformationFood f : data) {
+			mData.add(f);
+		}
 		notifyDataSetChanged();
 	}
 
@@ -105,6 +109,9 @@ class UserFoodAdapter extends BaseAdapter {
 							mIsChecked ? R.string.information_bookmark_food_add_success
 									: R.string.information_bookmark_food_delete_success,
 							Toast.LENGTH_SHORT).show();
+					onBookmarkFoodChanged(
+							((InformationFood) mButtonView.getTag()),
+							mIsChecked);
 				} else {
 					mButtonView.setChecked(mLstChecked);
 					Toast.makeText(
@@ -114,7 +121,6 @@ class UserFoodAdapter extends BaseAdapter {
 							Toast.LENGTH_SHORT).show();
 				}
 				mButtonView.setEnabled(true);
-				notifyDataSetChanged();
 			}
 		}
 	}
@@ -183,6 +189,10 @@ class UserFoodAdapter extends BaseAdapter {
 		}
 
 		return convertView;
+	}
+
+	public void onBookmarkFoodChanged(InformationFood food, boolean isBookmarked) {
+
 	}
 
 	public boolean onBookmarkFoodChange(InformationFood food,
