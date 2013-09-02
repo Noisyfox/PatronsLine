@@ -7,6 +7,7 @@ import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +98,7 @@ class UserShopAdapter extends BaseAdapter {
 			@Override
 			protected void onPostExecute(Boolean result) {
 				if (result) {
+					((InformationShop) mButtonView.getTag()).bookmark = mIsChecked;
 					mLstChecked = mIsChecked;
 					Toast.makeText(
 							mContext,
@@ -112,6 +114,7 @@ class UserShopAdapter extends BaseAdapter {
 							Toast.LENGTH_SHORT).show();
 				}
 				mButtonView.setEnabled(true);
+				notifyDataSetChanged();
 			}
 		}
 	}
@@ -137,63 +140,8 @@ class UserShopAdapter extends BaseAdapter {
 		textView_shop_name.setText(shop.name);
 
 		toggleButton_star_is_bookmarked
-				.setOnCheckedChangeListener(new MyOnCheckedChangeListener(shop.bookmark) /*{
-					
-					BookmarkDeleteTask mBookmarkDeleteTask = null;
-
-					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						if (!isChecked && mBookmarkDeleteTask == null) {
-							mBookmarkDeleteTask = new BookmarkDeleteTask(
-									buttonView);
-							mBookmarkDeleteTask.execute();
-						}
-					}
-
-					class BookmarkDeleteTask extends
-							AsyncTask<Void, Void, Boolean> {
-						private final CompoundButton mButtonView;
-
-						BookmarkDeleteTask(CompoundButton buttonView) {
-							mButtonView = buttonView;
-						}
-
-						@Override
-						protected Boolean doInBackground(Void... params) {
-							return SessionManager
-									.getSessionManager()
-									.bookmark_delete(
-											((InformationBookmarkShop) mButtonView
-													.getTag()).bsid, false) == SessionManager.ERROR_OK;
-						}
-
-						@Override
-						protected void onPostExecute(Boolean result) {
-							if (result) {
-								Toast.makeText(mContext,
-										R.string.msg_bookmark_delete_success,
-										Toast.LENGTH_SHORT).show();
-								mButtonView.setChecked(false);
-								mInformationSession.bookmarkShop
-										.remove((InformationBookmarkShop) mButtonView
-												.getTag());
-								notifyDataSetChanged();
-							} else {
-								mButtonView.setChecked(true);
-							}
-							mBookmarkDeleteTask = null;
-						}
-
-						@Override
-						protected void onCancelled() {
-							mBookmarkDeleteTask = null;
-							mButtonView.setChecked(true);
-						}
-
-					}
-					
-				}*/);
+				.setOnCheckedChangeListener(new MyOnCheckedChangeListener(
+						shop.bookmark));
 
 		toggleButton_star_is_bookmarked.setChecked(shop.bookmark);
 		toggleButton_star_is_bookmarked.setTag(shop);
@@ -230,6 +178,38 @@ class UserShopAdapter extends BaseAdapter {
 
 	public boolean onBookmarkShopChange(InformationShop shop,
 			boolean addBookmark) {
-		return true;
+		SessionManager.getSessionManager();
+		int result = 0;
+		if (addBookmark) {
+			result = SessionManager.getSessionManager().bookmark_add(shop.sid,
+					false);
+		} else {
+			InformationBookmarkShop bmsf = null;
+			InformationSession informationSession = SessionManager
+					.getCurrentSession();
+			if (informationSession.bookmarkFood.isEmpty()) {
+				if (SessionManager.getSessionManager().bookmark_list_shop() != SessionManager.ERROR_OK) {
+					return false;
+				} else {
+					if (informationSession.bookmarkShop.isEmpty()) {
+						return true;
+					}
+				}
+			}
+			for (InformationBookmarkShop bms : informationSession.bookmarkShop) {
+				if (bms.shop.sid == shop.sid) {
+					bmsf = bms;
+					break;
+				}
+			}
+			if (bmsf == null) {
+				return true;
+			}
+			informationSession.bookmarkShop.remove(bmsf);
+			Log.d("", "delete:" + bmsf.bsid);
+			result = SessionManager.getSessionManager().bookmark_delete(
+					bmsf.bsid, false);
+		}
+		return result == SessionManager.ERROR_OK;
 	}
 }

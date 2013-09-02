@@ -34,43 +34,7 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 		setEmptyText(getText(R.string.empty_text_no_favourite_food));
 		setHasOptionsMenu(true);
 
-		mFoodAdapter = new UserFoodAdapter(getActivity(), getListView()) {
-			@Override
-			public boolean onBookmarkFoodChange(InformationFood food,
-					boolean addBookmark) {
-				int result = 0;
-				if (addBookmark) {
-					result = SessionManager.getSessionManager().bookmark_add(
-							food.fid, true);
-				} else {
-					InformationBookmarkFood bmff = null;
-					if (mInformationSession.bookmarkFood.isEmpty()) {
-						if (SessionManager.getSessionManager()
-								.bookmark_list_food() != SessionManager.ERROR_OK) {
-							return false;
-						} else {
-							if (mInformationSession.bookmarkFood.isEmpty()) {
-								return true;
-							}
-						}
-					}
-					for (InformationBookmarkFood bmf : mInformationSession.bookmarkFood) {
-						if (bmf.food.fid == food.fid) {
-							bmff = bmf;
-							break;
-						}
-					}
-					if (bmff == null) {
-						return true;
-					}
-					mInformationSession.bookmarkFood.remove(bmff);
-					Log.d("","delete:" + bmff.bfid);
-					result = SessionManager.getSessionManager()
-							.bookmark_delete(bmff.bfid, true);
-				}
-				return result == SessionManager.ERROR_OK;
-			}
-		};
+		mFoodAdapter = new UserFoodAdapter(getActivity(), getListView());
 		loadData();
 		setListAdapter(mFoodAdapter);
 

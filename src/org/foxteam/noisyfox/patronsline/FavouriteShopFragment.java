@@ -34,45 +34,7 @@ public class FavouriteShopFragment extends SherlockListFragment {
 		setEmptyText(getText(R.string.empty_text_no_favourite_shop));
 		setHasOptionsMenu(true);
 
-		mShopAdapter = new UserShopAdapter(getActivity(), getListView()) {
-
-			@Override
-			public boolean onBookmarkShopChange(InformationShop shop,
-					boolean addBookmark) {
-				int result = 0;
-				if (addBookmark) {
-					result = SessionManager.getSessionManager().bookmark_add(
-							shop.sid, false);
-				} else {
-					InformationBookmarkShop bmsf = null;
-					if (mInformationSession.bookmarkFood.isEmpty()) {
-						if (SessionManager.getSessionManager()
-								.bookmark_list_shop() != SessionManager.ERROR_OK) {
-							return false;
-						} else {
-							if (mInformationSession.bookmarkShop.isEmpty()) {
-								return true;
-							}
-						}
-					}
-					for (InformationBookmarkShop bms : mInformationSession.bookmarkShop) {
-						if (bms.shop.sid == shop.sid) {
-							bmsf = bms;
-							break;
-						}
-					}
-					if (bmsf == null) {
-						return true;
-					}
-					mInformationSession.bookmarkShop.remove(bmsf);
-					Log.d("", "delete:" + bmsf.bsid);
-					result = SessionManager.getSessionManager()
-							.bookmark_delete(bmsf.bsid, false);
-				}
-				return result == SessionManager.ERROR_OK;
-			}
-
-		};
+		mShopAdapter = new UserShopAdapter(getActivity(), getListView());
 		loadData();
 		setListAdapter(mShopAdapter);
 

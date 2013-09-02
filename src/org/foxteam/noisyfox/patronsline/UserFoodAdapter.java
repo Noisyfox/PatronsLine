@@ -7,6 +7,7 @@ import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +98,7 @@ class UserFoodAdapter extends BaseAdapter {
 			@Override
 			protected void onPostExecute(Boolean result) {
 				if (result) {
+					((InformationFood) mButtonView.getTag()).bookmark = mIsChecked;
 					mLstChecked = mIsChecked;
 					Toast.makeText(
 							mContext,
@@ -112,6 +114,7 @@ class UserFoodAdapter extends BaseAdapter {
 							Toast.LENGTH_SHORT).show();
 				}
 				mButtonView.setEnabled(true);
+				notifyDataSetChanged();
 			}
 		}
 	}
@@ -184,6 +187,37 @@ class UserFoodAdapter extends BaseAdapter {
 
 	public boolean onBookmarkFoodChange(InformationFood food,
 			boolean addBookmark) {
-		return true;
+		int result = 0;
+		if (addBookmark) {
+			result = SessionManager.getSessionManager().bookmark_add(food.fid,
+					true);
+		} else {
+			InformationBookmarkFood bmff = null;
+			InformationSession informationSession = SessionManager
+					.getCurrentSession();
+			if (informationSession.bookmarkFood.isEmpty()) {
+				if (SessionManager.getSessionManager().bookmark_list_food() != SessionManager.ERROR_OK) {
+					return false;
+				} else {
+					if (informationSession.bookmarkFood.isEmpty()) {
+						return true;
+					}
+				}
+			}
+			for (InformationBookmarkFood bmf : informationSession.bookmarkFood) {
+				if (bmf.food.fid == food.fid) {
+					bmff = bmf;
+					break;
+				}
+			}
+			if (bmff == null) {
+				return true;
+			}
+			informationSession.bookmarkFood.remove(bmff);
+			Log.d("", "delete:" + bmff.bfid);
+			result = SessionManager.getSessionManager().bookmark_delete(
+					bmff.bfid, true);
+		}
+		return result == SessionManager.ERROR_OK;
 	}
 }
