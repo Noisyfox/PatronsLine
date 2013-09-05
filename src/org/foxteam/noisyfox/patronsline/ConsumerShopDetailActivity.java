@@ -9,12 +9,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 public class ConsumerShopDetailActivity extends SherlockListActivity {
 
@@ -25,6 +27,7 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 	private InformationShop mInformationShop = null;
 	private List<InformationFood> mFoods = null;
 	private TitledUserFoodAdapter mFoodAdapter = null;
+	private View titleView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +43,18 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		mInformationShop = InformationManager.obtainShopInformation(sid);
 		mFoods = mInformationShop.foods;
 
+		this.setTitle(mInformationShop.name);
+
+		LayoutInflater inflater = (LayoutInflater) ConsumerShopDetailActivity.this
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		titleView = inflater.inflate(R.layout.item_title_consumer_shop, null,
+				false);
+
 		mFoodAdapter = new TitledUserFoodAdapter(this, getListView()) {
 
 			@Override
 			public View getTitleView(View convertView, ViewGroup parent) {
-				LayoutInflater inflater = (LayoutInflater) ConsumerShopDetailActivity.this
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inflater.inflate(
-						R.layout.item_title_consumer_shop, parent, false);
-				return convertView;
+				return titleView;
 			}
 
 		};
@@ -57,6 +63,20 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 
 		showProgress(true);
 		new LoadShopInformationTask().execute();
+	}
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		if (position == 0 || v.getTag() == null) {
+			super.onListItemClick(l, v, position, id);
+		} else {
+			InformationFood food = (InformationFood) v.getTag();
+			Intent intent = new Intent();
+			intent.putExtra("fid", food.fid);
+			intent.putExtra("fromShop", true);
+			intent.setClass(this, ConsumerFoodDetailActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	public class LoadShopInformationTask extends AsyncTask<Void, Void, Boolean> {
@@ -70,7 +90,7 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
-				mFoodAdapter.notifyDataSetChanged();
+				mFoodAdapter.setData(mFoods);
 				showProgress(false);
 			}
 		}
