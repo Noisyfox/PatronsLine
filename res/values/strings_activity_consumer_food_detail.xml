@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_activity_consumer_food_detail">查看菜肴</string>
-    <string name="placeholder_food_introduction">简介</string>
-    <string name="placeholder_food_special">本店特色</string>
-    <string name="placeholder_food_shop">&lt;  店铺名</string>
-    <string name="placeholder_food_likes">10</string>
-    <string name="placeholder_food_dislikes">1</string>
     <string name="lable_add_bookmark">加收藏</string>
     <string name="lable_view_comments">评论:</string>
     <string name="lable_yuan">￥</string>

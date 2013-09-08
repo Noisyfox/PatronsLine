@@ -152,7 +152,7 @@
                         android:text="@string/lable_add_bookmark" />
 
                     <ToggleButton
-                        android:id="@+id/toggleButton_food_bookmark"
+                        android:id="@+id/toggleButton_star_is_bookmarked"
                         style="@style/ToggleButton_Star"
                         android:layout_width="48dp"
                         android:layout_height="48dp" />

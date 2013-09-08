@@ -40,6 +40,7 @@ public class InformationManager {
 			shop = mShopMap.get(sid);
 		} else {
 			shop = new InformationShop();
+			shop.isDetailed = false;
 			shop.sid = sid;
 			shop.foods = new ArrayList<InformationFood>();
 			mShopMap.put(sid, shop);

@@ -60,7 +60,7 @@ public class ConsumerFoodDetailActivity extends Activity {
 		mFoodSpecialView = (TextView) findViewById(R.id.textView_food_special);
 		mFoodNameView = (TextView) findViewById(R.id.textView_food_name);
 		mFoodPriceView = (TextView) findViewById(R.id.textView_food_price);
-		mFoodBookmarkView = (ToggleButton) findViewById(R.id.toggleButton_food_bookmark);
+		mFoodBookmarkView = (ToggleButton) findViewById(R.id.toggleButton_star_is_bookmarked);
 		mFoodLikesView = (TextView) findViewById(R.id.textView_food_likes);
 		mFoodDislikeView = (TextView) findViewById(R.id.textView_food_dislikes);
 		mFoodIntroView = (TextView) findViewById(R.id.textView_food_introduction);

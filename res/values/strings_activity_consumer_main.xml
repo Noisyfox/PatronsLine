@@ -5,10 +5,6 @@
     <string name="menu_refresh">刷新</string>
     <string name="empty_text_no_favourite_food">没有收藏的菜肴</string>
     <string name="empty_text_no_favourite_shop">没有收藏的店铺</string>
-    <string name="placeholder_food_name">菜名</string>
-    <string name="placeholder_food_price">价格</string>
-    <string name="placeholder_food_price_change">涨价啦</string>
-    <string name="placeholder_shop_name">店名</string>
     <string name="error_refresh_failure">刷新收藏列表失败</string>
     <string name="msg_bookmark_delete_success">已取消收藏</string>
 </resources>

@@ -477,6 +477,7 @@ public class SessionManager {
 
 			InformationShop shop = InformationManager
 					.obtainShopInformation(sid);
+			shop.isDetailed = true;
 			shop.name = name;
 			shop.address = address;
 			shop.introduction = introduction;
@@ -502,6 +503,50 @@ public class SessionManager {
 			e.printStackTrace();
 			return ERROR_SERVER_FAILURE;
 		}
+	}
+
+	public int shop_mark(String sid, int mark) {
+		if (mark < 0 || mark > 10) {
+			return ERROR_INTERNAL;
+		}
+
+		Map<Object, Object> params = new HashMap<Object, Object>();
+		params.put("method", "shop.mark");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("sid", sid);
+		params.put("mark", mark);
+
+		String response = NetworkHelper.doHttpRequest(
+				NetworkHelper.STR_SERVER_URL, params.entrySet());
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+
+			switch (result) {
+			case 1:// OK
+				return ERROR_OK;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
+
 	}
 
 	private InformationFood analysisFoodDetail(JSONObject jsonObj)

@@ -2,6 +2,8 @@ package org.foxteam.noisyfox.patronsline;
 
 import java.util.List;
 
+import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
+
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 
@@ -10,24 +12,45 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class ConsumerShopDetailActivity extends SherlockListActivity {
 
 	private View mShopDeatilLoadView;
 	private View mShopDetailView;
 
-	private InformationSession mInformationSession = null;
 	private InformationShop mInformationShop = null;
 	private List<InformationFood> mFoods = null;
 	private TitledUserFoodAdapter mFoodAdapter = null;
-	private View titleView = null;
+
+	private BookmarkProcessTask mBookmarkProcessTack = null;
+	private boolean mLastBookmarked = false;
+
+	private View titleView;
+	private ImageView imageView_photo;
+	private TextView textView_name;
+	private TextView textView_mark;
+	private ToggleButton toggleBotton_bookmark;
+	private RatingBar ratingBar_mark;
+	private TextView textView_introduction;
+	private TextView textView_address;
+	private TextView textView_phone;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +60,28 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		mShopDeatilLoadView = findViewById(R.id.shop_detail_load_view);
 		mShopDetailView = findViewById(R.id.shop_detail_view);
 
-		mInformationSession = SessionManager.getCurrentSession();
-
 		String sid = getIntent().getStringExtra("sid");
 		mInformationShop = InformationManager.obtainShopInformation(sid);
 		mFoods = mInformationShop.foods;
 
 		this.setTitle(mInformationShop.name);
 
-		LayoutInflater inflater = (LayoutInflater) ConsumerShopDetailActivity.this
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		titleView = inflater.inflate(R.layout.item_title_consumer_shop, null,
-				false);
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		titleView = inflater.inflate(R.layout.item_title_consumer_shop,
+				this.getListView(), false);
+
+		imageView_photo = (ImageView) titleView
+				.findViewById(R.id.imageView_photo);
+		textView_name = (TextView) titleView.findViewById(R.id.textView_name);
+		textView_mark = (TextView) titleView.findViewById(R.id.textView_mark);
+		toggleBotton_bookmark = (ToggleButton) titleView
+				.findViewById(R.id.toggleButton_star_is_bookmarked);
+		ratingBar_mark = (RatingBar) titleView.findViewById(R.id.ratingBar1);
+		textView_introduction = (TextView) titleView
+				.findViewById(R.id.textView_introduction);
+		textView_address = (TextView) titleView
+				.findViewById(R.id.textView_address);
+		textView_phone = (TextView) titleView.findViewById(R.id.TextView_phone);
 
 		mFoodAdapter = new TitledUserFoodAdapter(this, getListView()) {
 
@@ -90,6 +123,83 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
+
+				// imageView_photo;
+				if (mInformationShop.photoBitmap != null) {
+					imageView_photo
+							.setImageBitmap(mInformationShop.photoBitmap);
+				} else {
+					PictureManager pm = new PictureManager();
+					pm.setOnPictureGetListener(new OnPictureGetListener() {
+						@Override
+						public void onPictureGet(String pid, Bitmap pic) {
+							if (pid == mInformationShop.photo && pic != null) {
+								mInformationShop.photoBitmap = pic;
+								imageView_photo
+										.setImageBitmap(mInformationShop.photoBitmap);
+							}
+						}
+					});
+					pm.getPicture(mInformationShop.photo);
+				}
+				textView_name.setText(mInformationShop.name);
+				textView_mark.setText(String.format(
+						ConsumerShopDetailActivity.this
+								.getString(R.string.text_format_shop_mark),
+						mInformationShop.mark));
+				// toggleBotton_bookmark;
+				// ratingBar_mark;
+				textView_introduction.setText(mInformationShop.introduction);
+				textView_address.setText(mInformationShop.address);
+				textView_phone.setText(mInformationShop.phone_num);
+
+				mLastBookmarked = mInformationShop.bookmark;
+
+				toggleBotton_bookmark.setChecked(mInformationShop.bookmark);
+				toggleBotton_bookmark
+						.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+							@Override
+							public void onCheckedChanged(
+									CompoundButton buttonView, boolean isChecked) {
+								if (mLastBookmarked == isChecked)
+									return;
+
+								if (mBookmarkProcessTack != null) {
+									return;
+								} else {
+									buttonView.setEnabled(false);
+									mBookmarkProcessTack = new BookmarkProcessTask();
+									mBookmarkProcessTack.execute(isChecked);
+								}
+							}
+						});
+
+				ratingBar_mark.setRating(mInformationShop.user_mark <= 0 ? 0
+						: mInformationShop.user_mark / 2f);
+				ratingBar_mark
+						.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+							@Override
+							public void onRatingChanged(RatingBar ratingBar,
+									float rating, boolean fromUser) {
+								if (!fromUser) {
+									return;
+								}
+								Log.d("rate", "" + rating);
+								final int ratingI = (int) (rating * 2);
+								new Thread() {
+
+									@Override
+									public void run() {
+										SessionManager.getSessionManager()
+												.shop_mark(
+														mInformationShop.sid,
+														ratingI);
+									}
+
+								}.start();
+							}
+						});
+
 				mFoodAdapter.setData(mFoods);
 				showProgress(false);
 			}
@@ -146,4 +256,73 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		}
 	}
 
+	class BookmarkProcessTask extends AsyncTask<Boolean, Void, Boolean> {
+		boolean add = false;
+
+		@Override
+		protected Boolean doInBackground(Boolean... params) {
+			add = params[0];
+			int result = 0;
+			if (add) {
+				result = SessionManager.getSessionManager().bookmark_add(
+						mInformationShop.sid, false);
+			} else {
+				InformationBookmarkShop bmsf = null;
+				if (SessionManager.getCurrentSession().bookmarkShop.isEmpty()) {
+					if (SessionManager.getSessionManager().bookmark_list_shop() != SessionManager.ERROR_OK) {
+						return false;
+					} else {
+						if (SessionManager.getCurrentSession().bookmarkShop
+								.isEmpty()) {
+							return true;
+						}
+					}
+				}
+				for (InformationBookmarkShop bms : SessionManager
+						.getCurrentSession().bookmarkShop) {
+					if (bms.shop.sid == mInformationShop.sid) {
+						bmsf = bms;
+						break;
+					}
+				}
+				if (bmsf == null) {
+					return true;
+				}
+				SessionManager.getCurrentSession().bookmarkShop.remove(bmsf);
+				result = SessionManager.getSessionManager().bookmark_delete(
+						bmsf.bsid, false);
+			}
+			return result == SessionManager.ERROR_OK;
+		}
+
+		@Override
+		protected void onCancelled() {
+			toggleBotton_bookmark.setEnabled(true);
+			mBookmarkProcessTack = null;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if (result) {
+				Toast.makeText(
+						getApplication(),
+						add ? R.string.information_bookmark_shop_add_success
+								: R.string.information_bookmark_shop_delete_success,
+						Toast.LENGTH_SHORT).show();
+
+				mLastBookmarked = add;
+			} else {
+				Toast.makeText(
+						getApplication(),
+						add ? R.string.information_bookmark_shop_add_failure
+								: R.string.information_bookmark_shop_delete_failure,
+						Toast.LENGTH_SHORT).show();
+
+				toggleBotton_bookmark.setChecked(mLastBookmarked);
+			}
+			toggleBotton_bookmark.setEnabled(true);
+			mBookmarkProcessTack = null;
+		}
+
+	}
 }

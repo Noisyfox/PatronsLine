@@ -66,8 +66,10 @@ public class SplashScreenActivity extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			synchronized (mSplashThread) {
+				mSplashThread.notifyAll();
+			}
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
