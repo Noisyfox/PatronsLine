@@ -5,6 +5,7 @@
     <string name="lable_view_comments">评论:</string>
     <string name="lable_yuan">￥</string>
     <string name="lable_loading">正在努力加载中~</string>
+    <string name="lable_food_special">p本店特色</string>
     <string name="information_no_introduction">店主有点偷懒哟，没有写任何介绍~</string>
     <string name="information_bookmark_food_add_success">收藏菜肴成功</string>
     <string name="information_bookmark_food_add_failure">收藏菜肴失败</string>

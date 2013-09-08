@@ -74,8 +74,6 @@ public class FavouriteShopFragment extends SherlockListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Log.d("msg", "onListItemClick");
-
 		InformationShop informationShop = (InformationShop) v.getTag();
 		Intent intent = new Intent();
 		intent.putExtra("sid", informationShop.sid);
@@ -119,7 +117,8 @@ public class FavouriteShopFragment extends SherlockListFragment {
 					setListShownNoAnimation(true);
 				}
 			} else {
-				Toast.makeText(getActivity(), R.string.error_refresh_failure,
+				Toast.makeText(getActivity(),
+						R.string.error_refresh_bookmark_failure,
 						Toast.LENGTH_SHORT).show();
 			}
 			mGetBookmarkTask = null;

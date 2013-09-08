@@ -10,18 +10,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class FavouriteFoodFragment extends SherlockListFragment {
+public class ListShopFragment extends SherlockListFragment {
 
-	UserFoodAdapter mFoodAdapter = null;
-	private GetBookmarkTask mGetBookmarkTask = null;
+	UserShopAdapter mShopAdapter = null;
+	private GetShopListTask mGetShopListTask = null;
 
 	InformationSession mInformationSession = null;
-	private List<InformationFood> mFoods = new ArrayList<InformationFood>();
+	private List<InformationShop> mShops = new ArrayList<InformationShop>();
 	private boolean mDataRefreshed = false;
 
 	@Override
@@ -31,12 +32,12 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 		mInformationSession = SessionManager.getCurrentSession();
 
-		setEmptyText(getText(R.string.empty_text_no_favourite_food));
+		setEmptyText(getText(R.string.empty_text_no_list_shop));
 		setHasOptionsMenu(true);
 
-		mFoodAdapter = new UserFoodAdapter(getActivity(), getListView());
+		mShopAdapter = new UserShopAdapter(getActivity(), getListView());
 		loadData();
-		setListAdapter(mFoodAdapter);
+		setListAdapter(mShopAdapter);
 
 		if (!mDataRefreshed) {
 			mDataRefreshed = true;
@@ -46,11 +47,11 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 	}
 
 	private void loadData() {
-		mFoods.clear();
-		for (InformationBookmarkFood ibf : mInformationSession.bookmarkFood) {
-			mFoods.add(ibf.food);
+		mShops.clear();
+		for (InformationShop is : mInformationSession.listShop) {
+			mShops.add(is);
 		}
-		mFoodAdapter.setData(mFoods);
+		mShopAdapter.setData(mShops);
 	}
 
 	MenuItem mItem_refresh = null;
@@ -74,15 +75,15 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		InformationFood informationFood = (InformationFood) v.getTag();
+		InformationShop informationShop = (InformationShop) v.getTag();
 		Intent intent = new Intent();
-		intent.putExtra("fid", informationFood.fid);
-		intent.setClass(getActivity(), ConsumerFoodDetailActivity.class);
+		intent.putExtra("sid", informationShop.sid);
+		intent.setClass(getActivity(), ConsumerShopDetailActivity.class);
 		startActivity(intent);
 	}
 
 	private void refreshData() {
-		if (mGetBookmarkTask != null) {
+		if (mGetShopListTask != null) {
 			return;
 		}
 
@@ -90,17 +91,17 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 
 		Log.d("msg", "update");
 
-		mInformationSession.bookmarkFood.clear();
-		mGetBookmarkTask = new GetBookmarkTask();
-		mGetBookmarkTask.execute();
+		mInformationSession.listShop.clear();
+		mGetShopListTask = new GetShopListTask();
+		mGetShopListTask.execute();
 	}
 
-	class GetBookmarkTask extends AsyncTask<Void, Void, Void> {
+	class GetShopListTask extends AsyncTask<Void, Void, Void> {
 		int errCode = -1;
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			errCode = SessionManager.getSessionManager().bookmark_list_food();
+			errCode = SessionManager.getSessionManager().shop_list();
 
 			return null;
 		}
@@ -118,15 +119,15 @@ public class FavouriteFoodFragment extends SherlockListFragment {
 				}
 			} else {
 				Toast.makeText(getActivity(),
-						R.string.error_refresh_bookmark_failure,
+						R.string.error_refresh_shoplist_failure,
 						Toast.LENGTH_SHORT).show();
 			}
-			mGetBookmarkTask = null;
+			mGetShopListTask = null;
 		}
 
 		@Override
 		protected void onCancelled() {
-			mGetBookmarkTask = null;
+			mGetShopListTask = null;
 		}
 
 	}

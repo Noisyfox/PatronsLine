@@ -14,5 +14,6 @@ public class InformationSession {
 	// 收藏的菜肴，如果是食客则需要这个参数
 	List<InformationBookmarkShop> bookmarkShop;
 	List<InformationBookmarkFood> bookmarkFood;
+	List<InformationShop> listShop;
 
 }

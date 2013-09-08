@@ -170,6 +170,7 @@ public class SessionManager {
 			} else {
 				tmpSession.bookmarkFood = new ArrayList<InformationBookmarkFood>();
 				tmpSession.bookmarkShop = new ArrayList<InformationBookmarkShop>();
+				tmpSession.listShop = new ArrayList<InformationShop>();
 			}
 
 			mSession = tmpSession;
@@ -426,6 +427,70 @@ public class SessionManager {
 			default:// 服务器错误
 				return ERROR_SERVER_FAILURE;
 			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
+	}
+
+	public int shop_list() {
+		Map<Object, Object> params = new HashMap<Object, Object>();
+		params.put("method", "shop.list");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("school", mSession.user.school);
+		params.put("order", "rank");
+
+		String response = NetworkHelper.doHttpRequest(
+				NetworkHelper.STR_SERVER_URL, params.entrySet());
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+
+			switch (result) {
+			case 1:// OK
+				break;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+
+			mSession.listShop.clear();
+
+			JSONArray jsnonArray = jsonObj.getJSONArray("shops");
+			int count = jsnonArray.length();
+			for (int i = 0; i < count; i++) {
+				JSONObject shopi = jsnonArray.getJSONObject(i);
+				String sid = shopi.getString("sid");
+				String name = shopi.getString("name");
+				boolean bookmark = shopi.getBoolean("bookmarked");
+				String photo = shopi.getString("photo");
+				float mark = (float) shopi.getDouble("mark");
+				InformationShop shop = InformationManager
+						.obtainShopInformation(sid);
+				shop.name = name;
+				shop.bookmark = bookmark;
+				if (shop.photo != photo) {
+					shop.photoBitmap = null;
+				}
+				shop.photo = photo;
+				shop.mark = mark;
+				mSession.listShop.add(shop);
+			}
+			return ERROR_OK;
 
 		} catch (JSONException e) {
 			e.printStackTrace();

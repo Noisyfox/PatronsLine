@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="placeholder_food_introduction">ph_简介</string>
-    <string name="placeholder_food_special">ph_本店特色</string>
     <string name="placeholder_food_shop">ph_&lt;  店铺名</string>
     <string name="placeholder_food_likes">ph_10</string>
     <string name="placeholder_food_dislikes">ph_1</string>
