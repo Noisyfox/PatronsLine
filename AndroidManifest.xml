@@ -28,13 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="org.foxteam.noisyfox.patronsline.MainActivity"
-            android:label="@string/title_activity_main" >
+        <activity android:name="org.foxteam.noisyfox.patronsline.MainActivity" >
         </activity>
         <activity
             android:name="org.foxteam.noisyfox.patronsline.GuideActivity"
-            android:label="@string/title_activity_guide"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
@@ -42,9 +39,7 @@
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
-        <activity
-            android:name="org.foxteam.noisyfox.patronsline.ConsumerMainActivity"
-            android:label="@string/title_activity_consumer_main" >
+        <activity android:name="org.foxteam.noisyfox.patronsline.ConsumerMainActivity" >
         </activity>
         <activity
             android:name="org.foxteam.noisyfox.patronsline.RegisterActivity"
@@ -57,7 +52,7 @@
         </activity>
         <activity
             android:name="org.foxteam.noisyfox.patronsline.ConsumerShopDetailActivity"
-            android:label="@string/title_activity_consumer_shop_detail" android:theme="@style/Theme.Sherlock.Light">
+            android:theme="@style/Theme.Sherlock.Light" >
         </activity>
     </application>
 

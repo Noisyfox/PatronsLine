@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_shop_address">店铺地址:</string>
+    <string name="label_shop_phone">联系电话:</string>
+    <string name="text_format_shop_mark">店铺评分:%1$.1f</string>
+    <string name="information_bookmark_shop_add_success">收藏店铺成功</string>
+    <string name="information_bookmark_shop_add_failure">收藏店铺失败</string>
+    <string name="information_bookmark_shop_delete_success">取消收藏成功</string>
+    <string name="information_bookmark_shop_delete_failure">取消收藏失败</string>
+</resources>

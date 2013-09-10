@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_label_favourite_food">收藏菜肴</string>
+    <string name="tab_label_favourite_shop">收藏店铺</string>
+    <string name="tab_label_list_shop">周边店铺</string>
+    <string name="menu_refresh">刷新</string>
+    <string name="empty_text_no_favourite_food">没有收藏的菜肴</string>
+    <string name="empty_text_no_favourite_shop">没有收藏的店铺</string>
+    <string name="empty_text_no_list_shop">没有周边的店铺</string>
+    <string name="error_refresh_bookmark_failure">刷新收藏列表失败</string>
+    <string name="error_refresh_shoplist_failure">刷新店铺列表列表失败</string>
+    <string name="msg_bookmark_delete_success">已取消收藏</string>
+</resources>

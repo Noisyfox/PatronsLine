@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="title_activity_login">登陆</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_username">在这里输入用户名</string>
+    <string name="prompt_password">这里是密码</string>
+    <string name="prompt_auto_login">记住我哦</string>
+    <string name="action_sign_in"><b>登陆</b></string>
+    <string name="action_register">注册</string>
+    <string name="action_sign_in_short">登陆</string>
+    <string name="action_forgot_password">忘记密码了？</string>
+    <string name="login_progress_signing_in">登录中&#8230;</string>
+    <string name="error_invalid_password">密码太短了哦</string>
+    <string name="error_incorrect_password">密码不正确哦</string>
+    <string name="error_field_required">这里必须要填上！</string>
+    <string name="error_network_failure">网络错误</string>
+    <string name="error_internal">内部错误</string>
+
+</resources>

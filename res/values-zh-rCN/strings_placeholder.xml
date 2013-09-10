@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="placeholder_food_introduction">ph_简介</string>
+    <string name="placeholder_food_shop">ph_&lt;  店铺名</string>
+    <string name="placeholder_food_likes">ph_10</string>
+    <string name="placeholder_food_dislikes">ph_1</string>
+    <string name="placeholder_food_name">ph_菜名</string>
+    <string name="placeholder_food_price">ph_价格</string>
+    <string name="placeholder_food_price_change">ph_涨价啦</string>
+    <string name="placeholder_shop_name">ph_店名</string>
+    <string name="placeholder_shop_mark">ph_店铺评分</string>
+    <string name="placeholder_shop_introduction">ph_店铺简介</string>
+    <string name="placeholder_shop_address">ph_店铺地址</string>
+    <string name="placeholder_shop_phone">ph_电话号码</string>
+</resources>
