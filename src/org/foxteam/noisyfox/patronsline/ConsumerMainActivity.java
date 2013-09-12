@@ -34,6 +34,10 @@ public class ConsumerMainActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected void onDestroy() {
+		PatronsLineApplication mMyApp = (PatronsLineApplication) this
+				.getApplication();
+		mMyApp.destroyLocationClient();
+		mMyApp.destroyEngineManager();
 		PictureManager.cacheSave();
 		super.onDestroy();
 	}
