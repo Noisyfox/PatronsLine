@@ -603,10 +603,15 @@ public class SessionManager {
 
 			switch (result) {
 			case 1:// OK
-				return ERROR_OK;
+				break;
 			default:// 服务器错误
 				return ERROR_SERVER_FAILURE;
 			}
+			float nmark = (float) jsonObj.getDouble("newmark");
+			InformationShop shop = InformationManager.obtainShopInformation(sid);
+			shop.mark = nmark;
+			return ERROR_OK;
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return ERROR_SERVER_FAILURE;

@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -82,6 +83,19 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		textView_address = (TextView) titleView
 				.findViewById(R.id.textView_address);
 		textView_phone = (TextView) titleView.findViewById(R.id.TextView_phone);
+		titleView.findViewById(R.id.imageButton_mapView).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent();
+						intent.setClass(ConsumerShopDetailActivity.this,
+								ConsumerNavigateActivity.class);
+						intent.putExtra(
+								ConsumerNavigateActivity.STR_SHOPADDRESS,
+								mInformationShop.address);
+						ConsumerShopDetailActivity.this.startActivity(intent);
+					}
+				});
 
 		mFoodAdapter = new TitledUserFoodAdapter(this, getListView()) {
 
@@ -112,7 +126,8 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		}
 	}
 
-	public class LoadShopInformationTask extends AsyncTask<Void, Void, Boolean> {
+	private class LoadShopInformationTask extends
+			AsyncTask<Void, Void, Boolean> {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -185,18 +200,8 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 									return;
 								}
 								Log.d("rate", "" + rating);
-								final int ratingI = (int) (rating * 2);
-								new Thread() {
-
-									@Override
-									public void run() {
-										SessionManager.getSessionManager()
-												.shop_mark(
-														mInformationShop.sid,
-														ratingI);
-									}
-
-								}.start();
+								int ratingI = (int) (rating * 2);
+								new UsermarkProcessTask().execute(ratingI);
 							}
 						});
 
@@ -256,7 +261,25 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		}
 	}
 
-	class BookmarkProcessTask extends AsyncTask<Boolean, Void, Boolean> {
+	private class UsermarkProcessTask extends AsyncTask<Integer, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Integer... params) {
+			SessionManager.getSessionManager().shop_mark(mInformationShop.sid,
+					params[0]);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			textView_mark.setText(String.format(ConsumerShopDetailActivity.this
+					.getString(R.string.text_format_shop_mark),
+					mInformationShop.mark));
+		}
+
+	}
+
+	private class BookmarkProcessTask extends AsyncTask<Boolean, Void, Boolean> {
 		boolean add = false;
 
 		@Override
