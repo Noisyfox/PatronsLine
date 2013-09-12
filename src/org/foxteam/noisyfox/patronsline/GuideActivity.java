@@ -20,7 +20,8 @@ import android.widget.BaseAdapter;
 @SuppressWarnings("deprecation")
 public class GuideActivity extends Activity {
 
-	final int[] mImageIds = { R.drawable.f03, R.drawable.f04, R.drawable.f05 };
+	final int[] mImageIds = { R.drawable.guide_1, R.drawable.guide_2,
+			R.drawable.guide_3 };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
