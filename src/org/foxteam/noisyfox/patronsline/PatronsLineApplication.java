@@ -25,7 +25,6 @@ import com.baidu.mapapi.utils.DistanceUtil;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Environment;
@@ -53,8 +52,8 @@ public class PatronsLineApplication extends Application {
 		mDefualtPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		loadLocationData();
-		initEngineManager(this);
-		initLocationClient(this);
+		initEngineManager();
+		initLocationClient();
 
 		File f = new File(PATH_APP_WORKDIR);
 		f.mkdirs();
@@ -171,15 +170,15 @@ public class PatronsLineApplication extends Application {
 		}
 	}
 
-	public void initEngineManager(Context context) {
+	public void initEngineManager() {
 		if (mBMapManager == null) {
-			mBMapManager = new BMapManager(context);
+			mBMapManager = new BMapManager(this);
 			mIsInited = false;
 		}
 
 		if (!mIsInited) {
 			if (!mBMapManager.init(strKey, new MyGeneralListener())) {
-				Toast.makeText(context, "BMapManager 初始化错误!", Toast.LENGTH_LONG)
+				Toast.makeText(this, "BMapManager 初始化错误!", Toast.LENGTH_LONG)
 						.show();
 				// mIsInited = false;
 			} else {
@@ -190,9 +189,9 @@ public class PatronsLineApplication extends Application {
 
 	}
 
-	public void initLocationClient(Context context) {
+	public void initLocationClient() {
 		if (mLocClient == null) {
-			mLocClient = new LocationClient(context);
+			mLocClient = new LocationClient(this);
 			mLocClient.registerLocationListener(mLocListener);
 			LocationClientOption option = new LocationClientOption();
 			option.setOpenGps(true);// 打开gps

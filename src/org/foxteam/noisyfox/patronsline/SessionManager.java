@@ -608,10 +608,11 @@ public class SessionManager {
 				return ERROR_SERVER_FAILURE;
 			}
 			float nmark = (float) jsonObj.getDouble("newmark");
-			InformationShop shop = InformationManager.obtainShopInformation(sid);
+			InformationShop shop = InformationManager
+					.obtainShopInformation(sid);
 			shop.mark = nmark;
 			return ERROR_OK;
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return ERROR_SERVER_FAILURE;

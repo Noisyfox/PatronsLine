@@ -93,6 +93,8 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 						intent.putExtra(
 								ConsumerNavigateActivity.STR_SHOPADDRESS,
 								mInformationShop.address);
+						intent.putExtra(ConsumerNavigateActivity.STR_SHOPNAME,
+								mInformationShop.name);
 						ConsumerShopDetailActivity.this.startActivity(intent);
 					}
 				});
