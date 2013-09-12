@@ -80,8 +80,8 @@
         android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical" >
 
@@ -123,6 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/placeholder_shop_address" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -132,7 +133,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="0"
+            android:contentDescription="@string/hello_world"
             android:src="@android:drawable/ic_menu_mylocation" />
 
     </LinearLayout>
