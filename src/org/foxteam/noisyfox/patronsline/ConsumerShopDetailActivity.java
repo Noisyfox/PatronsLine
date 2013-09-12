@@ -66,6 +66,7 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		mFoods = mInformationShop.foods;
 
 		this.setTitle(mInformationShop.name);
+		this.getSupportActionBar().setIcon(R.drawable.title_icon_shop);
 
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		titleView = inflater.inflate(R.layout.item_title_consumer_shop,
