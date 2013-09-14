@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="shop_action_view_food_order">查看菜肴排名</string>
+    <string name="shop_action_food_manage">管理菜肴</string>
+    <string name="label_shop_popularity">人气:%1$.1f</string>
+    <string name="label_shop_mark">评分:%1$.1f</string>
+
+</resources>

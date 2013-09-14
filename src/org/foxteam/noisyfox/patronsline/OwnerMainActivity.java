@@ -14,11 +14,17 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class OwnerMainActivity extends SherlockActivity {
 
 	private View mShopDeatilLoadView;
 	private View mShopDetailView;
+	private ImageView mImageView_picture;
+	private TextView mTextViewPopularity;
+	private TextView mTextViewMark;
+
 	private InformationShop mInformationShop = null;
 
 	private ActionBar mActionBar;
@@ -36,6 +42,9 @@ public class OwnerMainActivity extends SherlockActivity {
 
 		mShopDeatilLoadView = findViewById(R.id.shop_detail_load_view);
 		mShopDetailView = findViewById(R.id.shop_detail_view);
+		mImageView_picture = (ImageView) findViewById(R.id.imageView_picture);
+		mTextViewPopularity = (TextView) findViewById(R.id.textView_popularity);
+		mTextViewMark = (TextView) findViewById(R.id.textView_mark);
 
 		mInformationShop = SessionManager.getCurrentSession().ownedShop.get(0);
 
@@ -114,6 +123,14 @@ public class OwnerMainActivity extends SherlockActivity {
 					// 显示主界面
 					showProgress(false);
 					mActionBar.setTitle(mInformationShop.name);
+					mTextViewPopularity.setText(String.format(
+							getString(R.string.label_shop_popularity),
+							mInformationShop.popularity));
+					mTextViewMark.setText(String.format(
+							getString(R.string.label_shop_mark),
+							mInformationShop.mark));
+					PictureManager.loadPicture(mInformationShop,
+							mImageView_picture);
 				}
 			}
 			mLoadShopInformationTask = null;

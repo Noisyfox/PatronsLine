@@ -9,6 +9,7 @@
     <string name="placeholder_food_price_change">ph_涨价啦</string>
     <string name="placeholder_shop_name">ph_店名</string>
     <string name="placeholder_shop_mark">ph_店铺评分</string>
+    <string name="placeholder_shop_popularity">ph_店铺人气</string>
     <string name="placeholder_shop_introduction">ph_店铺简介</string>
     <string name="placeholder_shop_address">ph_店铺地址</string>
     <string name="placeholder_shop_phone">ph_电话号码</string>
