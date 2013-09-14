@@ -7,6 +7,7 @@ import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -153,7 +154,17 @@ class UserFoodAdapter extends BaseAdapter {
 
 		textView_food_name.setText(food.name);
 		textView_food_price.setText(food.price + "元");
-		textView_food_price_change.setText("");
+		textView_food_price_change.getPaint().setFlags(
+				Paint.STRIKE_THRU_TEXT_FLAG);
+		if (food.price_delta == 0) {
+			textView_food_price_change.setText("");
+		} else {
+			textView_food_price_change
+					.setText(String.format(
+							mContext.getString(food.price_delta > 0 ? R.string.label_price_change_up
+									: R.string.label_price_change_down),
+							food.price_delta));
+		}
 		toggleButton_star_is_bookmarked
 				.setOnCheckedChangeListener(new MyOnCheckedChangeListener(
 						food.bookmark));

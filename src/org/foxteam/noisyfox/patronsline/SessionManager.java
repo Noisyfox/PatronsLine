@@ -256,6 +256,8 @@ public class SessionManager {
 				bookmark.food.sid = sid;
 				bookmark.food.name = food.getString("name");
 				bookmark.food.price = (float) food.getDouble("price");
+				bookmark.food.price_delta = (float) food
+						.getDouble("price_delta");
 				bookmark.food.special = food.getBoolean("special");
 				bookmark.food.photo = food.getString("photo");
 				bookmark.food.bookmark = true;
@@ -663,6 +665,7 @@ public class SessionManager {
 		String sid = jsonObj.getString("sid");
 		String name = jsonObj.getString("name");
 		float price = (float) jsonObj.getDouble("price");
+		float price_delta = (float) jsonObj.getDouble("price_delta");
 		boolean special = jsonObj.getBoolean("special");
 		String photo = jsonObj.getString("photo");
 		long likes = jsonObj.getLong("likes");
@@ -675,6 +678,7 @@ public class SessionManager {
 		food.sid = sid;
 		food.name = name;
 		food.price = price;
+		food.price_delta = price_delta;
 		food.special = special;
 		if (food.photo != photo) {
 			food.photoBitmap = null;

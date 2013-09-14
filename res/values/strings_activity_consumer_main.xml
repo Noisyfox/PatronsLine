@@ -10,4 +10,6 @@
     <string name="error_refresh_bookmark_failure">刷新收藏列表失败</string>
     <string name="error_refresh_shoplist_failure">刷新店铺列表列表失败</string>
     <string name="msg_bookmark_delete_success">已取消收藏</string>
+    <string name="label_price_change_up">%1$.1f↑</string>
+    <string name="label_price_change_down">%1$.1f↓</string>
 </resources>

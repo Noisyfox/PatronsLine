@@ -10,6 +10,7 @@ public class InformationFood {
 	String introduction;
 	boolean bookmark;
 	float price;
+	float price_delta;
 	boolean special;
 	String photo;
 	Bitmap photoBitmap;
