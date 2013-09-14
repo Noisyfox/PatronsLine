@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.ImageView;
 
 /**
  * 一个用来管理所有图片的类，负责根据图片id获取bitmap.<br>
@@ -215,5 +216,43 @@ public class PictureManager {
 
 	public static interface OnPictureGetListener {
 		public void onPictureGet(String pid, Bitmap pic);
+	}
+
+	public static void loadPicture(final InformationFood food,
+			final ImageView imageView) {
+		if (food.photoBitmap != null) {
+			imageView.setImageBitmap(food.photoBitmap);
+		} else {
+			PictureManager pm = new PictureManager();
+			pm.setOnPictureGetListener(new OnPictureGetListener() {
+				@Override
+				public void onPictureGet(String pid, Bitmap pic) {
+					if (pid == food.photo && pic != null) {
+						food.photoBitmap = pic;
+						imageView.setImageBitmap(food.photoBitmap);
+					}
+				}
+			});
+			pm.getPicture(food.photo);
+		}
+	}
+
+	public static void loadPicture(final InformationShop shop,
+			final ImageView imageView) {
+		if (shop.photoBitmap != null) {
+			imageView.setImageBitmap(shop.photoBitmap);
+		} else {
+			PictureManager pm = new PictureManager();
+			pm.setOnPictureGetListener(new OnPictureGetListener() {
+				@Override
+				public void onPictureGet(String pid, Bitmap pic) {
+					if (pid == shop.photo && pic != null) {
+						shop.photoBitmap = pic;
+						imageView.setImageBitmap(shop.photoBitmap);
+					}
+				}
+			});
+			pm.getPicture(shop.photo);
+		}
 	}
 }

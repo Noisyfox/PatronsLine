@@ -2,8 +2,6 @@ package org.foxteam.noisyfox.patronsline;
 
 import java.util.List;
 
-import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
-
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 
@@ -12,7 +10,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -141,25 +138,7 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
-
-				// imageView_photo;
-				if (mInformationShop.photoBitmap != null) {
-					imageView_photo
-							.setImageBitmap(mInformationShop.photoBitmap);
-				} else {
-					PictureManager pm = new PictureManager();
-					pm.setOnPictureGetListener(new OnPictureGetListener() {
-						@Override
-						public void onPictureGet(String pid, Bitmap pic) {
-							if (pid == mInformationShop.photo && pic != null) {
-								mInformationShop.photoBitmap = pic;
-								imageView_photo
-										.setImageBitmap(mInformationShop.photoBitmap);
-							}
-						}
-					});
-					pm.getPicture(mInformationShop.photo);
-				}
+				PictureManager.loadPicture(mInformationShop, imageView_photo);
 				textView_name.setText(mInformationShop.name);
 				textView_mark.setText(String.format(
 						ConsumerShopDetailActivity.this

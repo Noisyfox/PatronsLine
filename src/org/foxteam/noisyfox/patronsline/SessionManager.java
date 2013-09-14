@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -174,19 +173,6 @@ public class SessionManager {
 			}
 
 			mSession = tmpSession;
-
-			PictureManager pictureManager = new PictureManager();
-			pictureManager.setOnPictureGetListener(new OnPictureGetListener() {
-				@Override
-				public void onPictureGet(String pid, Bitmap pic) {
-					if (pic != null && mSession != null
-							&& mSession.user != null
-							&& mSession.user.avatar == pid) {
-						mSession.user.avatarBitmap = pic;
-					}
-				}
-			});
-			pictureManager.getPicture(avatar);
 
 			return ERROR_OK;
 

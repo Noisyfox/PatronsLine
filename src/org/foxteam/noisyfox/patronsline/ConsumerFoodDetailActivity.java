@@ -1,7 +1,5 @@
 package org.foxteam.noisyfox.patronsline;
 
-import org.foxteam.noisyfox.patronsline.PictureManager.OnPictureGetListener;
-
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +8,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
@@ -116,22 +113,7 @@ public class ConsumerFoodDetailActivity extends Activity {
 						}
 					});
 				}
-				if (mInformationFood.photoBitmap != null) {
-					mFoodImageView.setImageBitmap(mInformationFood.photoBitmap);
-				} else {
-					PictureManager pm = new PictureManager();
-					pm.setOnPictureGetListener(new OnPictureGetListener() {
-						@Override
-						public void onPictureGet(String pid, Bitmap pic) {
-							if (pid == mInformationFood.photo && pic != null) {
-								mInformationFood.photoBitmap = pic;
-								mFoodImageView
-										.setImageBitmap(mInformationFood.photoBitmap);
-							}
-						}
-					});
-					pm.getPicture(mInformationFood.photo);
-				}
+				PictureManager.loadPicture(mInformationFood, mFoodImageView);
 				mFoodSpecialView
 						.setVisibility(mInformationFood.special ? View.VISIBLE
 								: View.GONE);
