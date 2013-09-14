@@ -1,22 +1,27 @@
 package org.foxteam.noisyfox.patronsline;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.View;
 
-public class OwnerMainActivity extends Activity {
+public class OwnerMainActivity extends SherlockActivity {
 
 	private View mShopDeatilLoadView;
 	private View mShopDetailView;
-	InformationShop mInformationShop = null;
+	private InformationShop mInformationShop = null;
+
+	private ActionBar mActionBar;
 
 	public static final int REQUESTCODE_NEW_SHOP = 1;
 	public static final int REQUESTCODE_EDIT_SHOP = 2;
@@ -25,6 +30,9 @@ public class OwnerMainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_owner_main);
+
+		mActionBar = getSupportActionBar();
+		mActionBar.setIcon(R.drawable.title_icon_shop);
 
 		mShopDeatilLoadView = findViewById(R.id.shop_detail_load_view);
 		mShopDetailView = findViewById(R.id.shop_detail_view);
@@ -36,8 +44,21 @@ public class OwnerMainActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.owner_main, menu);
+		menu.add("Manage").setIcon(android.R.drawable.ic_menu_manage)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		Intent i = new Intent();
+		i.setClass(OwnerMainActivity.this, OwnerShopEditActivity.class);
+		i.putExtra("sid", mInformationShop.sid);
+		i.putExtra("requestCode", REQUESTCODE_EDIT_SHOP);
+		startActivityForResult(i, REQUESTCODE_EDIT_SHOP);
+
 		return true;
 	}
 
@@ -92,6 +113,7 @@ public class OwnerMainActivity extends Activity {
 				} else {
 					// 显示主界面
 					showProgress(false);
+					mActionBar.setTitle(mInformationShop.name);
 				}
 			}
 			mLoadShopInformationTask = null;
