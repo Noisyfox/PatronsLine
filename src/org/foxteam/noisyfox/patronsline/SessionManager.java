@@ -692,6 +692,66 @@ public class SessionManager {
 		return food;
 	}
 
+	public int food_delete(String sid, String[] fids) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(fids[0]);
+		for (int i = 1; i < fids.length; i++) {
+			sb.append(',');
+			sb.append(fids[i]);
+		}
+		Map<Object, Object> params = new HashMap<Object, Object>();
+		params.put("method", "food.delete");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("sid", sid);
+		params.put("fids", sb.toString());
+
+		String response = NetworkHelper.doHttpRequest(
+				NetworkHelper.STR_SERVER_URL, params.entrySet());
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+
+			switch (result) {
+			case 1:// OK
+				break;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+
+			JSONObject results = jsonObj.getJSONObject("results");
+			InformationShop shop = InformationManager
+					.obtainShopInformation(sid);
+			for (int i = 0; i < fids.length; i++) {
+				boolean re = results.getBoolean(fids[i]);
+				if (re) {
+					InformationFood food = InformationManager
+							.obtainFoodInformation(fids[i]);
+					shop.foods.remove(food);
+				}
+			}
+			return ERROR_OK;
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
+
+	}
+
 	public int food_detail(String fid) {
 		Map<Object, Object> params = new HashMap<Object, Object>();
 		params.put("method", "food.detail");

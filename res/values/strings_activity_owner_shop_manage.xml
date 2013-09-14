@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="menu_add_food">添加菜肴</string>
+    <string name="menu_delete_food">删除菜肴</string>
+    <string name="menu_select_all">全选</string>
+    <string name="menu_deselect_all">清除选择</string>
+    <string name="message_delete_comfirm">确定要删除已选择的菜肴吗</string>
+    <string name="button_ok">确定</string>
+    <string name="button_cancel">取消</string>
+</resources>

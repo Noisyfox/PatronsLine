@@ -61,6 +61,18 @@ public class OwnerMainActivity extends SherlockActivity {
 					}
 				});
 
+		findViewById(R.id.button_food_manage).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent i = new Intent();
+						i.setClass(OwnerMainActivity.this,
+								OwnerFoodManageActivity.class);
+						i.putExtra("sid", mInformationShop.sid);
+						startActivity(i);
+					}
+				});
+
 		loadShopData();
 	}
 

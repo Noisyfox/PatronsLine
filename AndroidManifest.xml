@@ -116,7 +116,13 @@
         </activity>
         <activity android:name="org.foxteam.noisyfox.patronsline.OwnerShopEditActivity" >
         </activity>
-        <activity android:name="org.foxteam.noisyfox.patronsline.OwnerFoodOrderActivity" android:theme="@style/Theme.Sherlock.Light">
+        <activity
+            android:name="org.foxteam.noisyfox.patronsline.OwnerFoodOrderActivity"
+            android:theme="@style/Theme.Sherlock.Light" >
+        </activity>
+        <activity
+            android:name="org.foxteam.noisyfox.patronsline.OwnerFoodManageActivity"
+            android:theme="@style/Theme.Sherlock.Light" >
         </activity>
     </application>
 
