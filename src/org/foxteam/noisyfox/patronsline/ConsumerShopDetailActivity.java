@@ -30,7 +30,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class ConsumerShopDetailActivity extends SherlockListActivity {
 
-	private View mShopDeatilLoadView;
+	private View mShopDetailLoadView;
 	private View mShopDetailView;
 
 	private InformationShop mInformationShop = null;
@@ -55,7 +55,7 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_consumer_shop_detail);
 
-		mShopDeatilLoadView = findViewById(R.id.shop_detail_load_view);
+		mShopDetailLoadView = findViewById(R.id.shop_detail_load_view);
 		mShopDetailView = findViewById(R.id.shop_detail_view);
 
 		String sid = getIntent().getStringExtra("sid");
@@ -213,13 +213,13 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 			int shortAnimTime = getResources().getInteger(
 					android.R.integer.config_shortAnimTime);
 
-			mShopDeatilLoadView.setVisibility(View.VISIBLE);
-			mShopDeatilLoadView.animate().setDuration(shortAnimTime)
+			mShopDetailLoadView.setVisibility(View.VISIBLE);
+			mShopDetailLoadView.animate().setDuration(shortAnimTime)
 					.alpha(show ? 1 : 0)
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							mShopDeatilLoadView
+							mShopDetailLoadView
 									.setVisibility(show ? View.VISIBLE
 											: View.GONE);
 						}
@@ -238,7 +238,7 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
-			mShopDeatilLoadView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mShopDetailLoadView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mShopDetailView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}

@@ -14,12 +14,13 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class OwnerMainActivity extends SherlockActivity {
 
-	private View mShopDeatilLoadView;
+	private View mShopDetailLoadView;
 	private View mShopDetailView;
 	private ImageView mImageView_picture;
 	private TextView mTextViewPopularity;
@@ -40,13 +41,25 @@ public class OwnerMainActivity extends SherlockActivity {
 		mActionBar = getSupportActionBar();
 		mActionBar.setIcon(R.drawable.title_icon_shop);
 
-		mShopDeatilLoadView = findViewById(R.id.shop_detail_load_view);
+		mShopDetailLoadView = findViewById(R.id.shop_detail_load_view);
 		mShopDetailView = findViewById(R.id.shop_detail_view);
 		mImageView_picture = (ImageView) findViewById(R.id.imageView_picture);
 		mTextViewPopularity = (TextView) findViewById(R.id.textView_popularity);
 		mTextViewMark = (TextView) findViewById(R.id.textView_mark);
 
 		mInformationShop = SessionManager.getCurrentSession().ownedShop.get(0);
+
+		findViewById(R.id.button_view_food_order).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent i = new Intent();
+						i.setClass(OwnerMainActivity.this,
+								OwnerFoodOrderActivity.class);
+						i.putExtra("sid", mInformationShop.sid);
+						startActivity(i);
+					}
+				});
 
 		loadShopData();
 	}
@@ -155,13 +168,13 @@ public class OwnerMainActivity extends SherlockActivity {
 			int shortAnimTime = getResources().getInteger(
 					android.R.integer.config_shortAnimTime);
 
-			mShopDeatilLoadView.setVisibility(View.VISIBLE);
-			mShopDeatilLoadView.animate().setDuration(shortAnimTime)
+			mShopDetailLoadView.setVisibility(View.VISIBLE);
+			mShopDetailLoadView.animate().setDuration(shortAnimTime)
 					.alpha(show ? 1 : 0)
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							mShopDeatilLoadView
+							mShopDetailLoadView
 									.setVisibility(show ? View.VISIBLE
 											: View.GONE);
 						}
@@ -180,7 +193,7 @@ public class OwnerMainActivity extends SherlockActivity {
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
-			mShopDeatilLoadView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mShopDetailLoadView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mShopDetailView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}

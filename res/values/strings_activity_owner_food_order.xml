@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="menu_order">排序</string>
+    <string name="menu_sub_quantitative">按喜爱数量</string>
+    <string name="menu_sub_ratio">按喜爱比例</string>
+    
+</resources>

@@ -30,7 +30,7 @@ public class ConsumerFoodDetailActivity extends Activity {
 	private BookmarkProcessTask mBookmarkProcessTack = null;
 	private boolean mLastBookmarked = false;
 
-	private View mFoodDeatilLoadView;
+	private View mFoodDetailLoadView;
 	private View mFoodDetailView;
 
 	private Button mBackToShopView;
@@ -49,7 +49,7 @@ public class ConsumerFoodDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_consumer_food_detail);
 
-		mFoodDeatilLoadView = findViewById(R.id.food_detail_load_view);
+		mFoodDetailLoadView = findViewById(R.id.food_detail_load_view);
 		mFoodDetailView = findViewById(R.id.food_detail_view);
 
 		mBackToShopView = (Button) findViewById(R.id.button_back_to_shop);
@@ -244,13 +244,13 @@ public class ConsumerFoodDetailActivity extends Activity {
 			int shortAnimTime = getResources().getInteger(
 					android.R.integer.config_shortAnimTime);
 
-			mFoodDeatilLoadView.setVisibility(View.VISIBLE);
-			mFoodDeatilLoadView.animate().setDuration(shortAnimTime)
+			mFoodDetailLoadView.setVisibility(View.VISIBLE);
+			mFoodDetailLoadView.animate().setDuration(shortAnimTime)
 					.alpha(show ? 1 : 0)
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							mFoodDeatilLoadView
+							mFoodDetailLoadView
 									.setVisibility(show ? View.VISIBLE
 											: View.GONE);
 						}
@@ -269,7 +269,7 @@ public class ConsumerFoodDetailActivity extends Activity {
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
-			mFoodDeatilLoadView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mFoodDetailLoadView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mFoodDetailView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
