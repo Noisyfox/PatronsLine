@@ -109,6 +109,11 @@
             android:enabled="true"
             android:process=":remote" >
         </service>
+
+        <activity android:name="org.foxteam.noisyfox.patronsline.OwnerMainActivity" >
+        </activity>
+        <activity android:name="org.foxteam.noisyfox.patronsline.OwnerShopEditActivity" >
+        </activity>
     </application>
 
 </manifest>

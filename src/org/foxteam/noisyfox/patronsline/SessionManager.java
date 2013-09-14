@@ -163,10 +163,10 @@ public class SessionManager {
 			tmpUser.school = school;
 			tmpUser.region = region;
 			if (type == 1) {
-				String shopid = jsonObj.getString("shopid");
-				tmpUser.shopid = new ArrayList<String>();
-				tmpUser.shopid.add(shopid);
+				String shopid = jsonObj.getString("sid");
 				tmpSession.ownedShop = new ArrayList<InformationShop>();
+				tmpSession.ownedShop.add(InformationManager
+						.obtainShopInformation(shopid));
 			} else {
 				tmpSession.bookmarkFood = new ArrayList<InformationBookmarkFood>();
 				tmpSession.bookmarkShop = new ArrayList<InformationBookmarkShop>();
@@ -421,6 +421,57 @@ public class SessionManager {
 			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
 			int result = jsonObj.getInt("result");
 
+			switch (result) {
+			case 1:// OK
+				return ERROR_OK;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
+	}
+
+	public int shop_modify(String sid, String name, String address,
+			String introduction, String phonenum, Bitmap photo) {
+		Map<Object, Object> params = new HashMap<Object, Object>();
+
+		params.put("method", "shop.modify");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("sid", sid);
+		params.put("name", name);
+		params.put("address", address);
+		params.put("introduction", introduction);
+		params.put("phonenum", phonenum);
+
+		ImageUploader.Image img = null;
+		try {
+			img = new ImageUploader.Image("photo", "photoUpload_" + name, photo);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ERROR_IO_FAILURE;
+		}
+
+		String response = ImageUploader.post(NetworkHelper.STR_SERVER_URL,
+				params.entrySet(), new ImageUploader.Image[] { img });
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
 			switch (result) {
 			case 1:// OK
 				return ERROR_OK;

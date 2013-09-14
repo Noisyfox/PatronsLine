@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_activity_owner_shop_edit_edit">修改店铺信息</string>
+    <string name="title_activity_owner_shop_edit_create">创建店铺</string>
+    <string name="edit_progress_save">保存中</string>
+    <string name="edit_progress_create">创建中</string>
+    <string name="edit_action_change_picture">更改照片</string>
+    <string name="edit_action_upload_picture">上传照片</string>
+    <string name="edit_action_save"><b>保存更改</b></string>
+    <string name="edit_action_create"><b>创建店铺</b></string>
+    <string name="prompt_shop_name">在这里填店铺名称</string>
+    <string name="prompt_shop_address">这里是地址哦</string>
+    <string name="prompt_shop_phone">店铺的电话</string>
+    <string name="prompt_shop_introduction">店铺的简介</string>
+    <string name="error_invalid_phone">This phone number is too short</string>
+    <string name="error_save_failure">修改店铺信息失败</string>
+    <string name="error_create_failure">创建店铺失败</string>
+
+</resources>

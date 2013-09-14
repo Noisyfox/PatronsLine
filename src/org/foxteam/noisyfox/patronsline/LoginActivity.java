@@ -259,8 +259,7 @@ public class LoginActivity extends Activity {
 					intent.setClass(LoginActivity.this,
 							ConsumerMainActivity.class);
 				} else {// 商家
-					intent.setClass(LoginActivity.this,
-							ConsumerMainActivity.class);
+					intent.setClass(LoginActivity.this, OwnerMainActivity.class);
 				}
 				startActivity(intent);
 				break;

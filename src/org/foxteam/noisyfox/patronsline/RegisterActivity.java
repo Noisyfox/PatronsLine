@@ -275,25 +275,22 @@ public class RegisterActivity extends Activity {
 		}
 	}
 
-	public class UserRegisterTask extends AsyncTask<String, Void, Void> {
-		int errCode = -1;
+	public class UserRegisterTask extends AsyncTask<Void, Void, Integer> {
 
 		@Override
-		protected Void doInBackground(String... params) {
+		protected Integer doInBackground(Void... params) {
 			SessionManager sm = SessionManager.getSessionManager();
 
-			errCode = sm.user_register(mUsername, mPassword, mSex, mType,
-					mAvatar, mSchool, mRegion);
-
-			return null;
+			return sm.user_register(mUsername, mPassword, mSex, mType, mAvatar,
+					mSchool, mRegion);
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Integer result) {
 			mRegisterTask = null;
 			showProgress(false);
 
-			switch (errCode) {
+			switch (result) {
 			case SessionManager.ERROR_OK:
 				setResult(RESULT_OK);
 				finish();
