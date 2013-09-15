@@ -91,6 +91,7 @@ public class OwnerShopEditActivity extends Activity {
 			if (shop.photoBitmap != null) {
 				mImageView_picture.setImageBitmap(shop.photoBitmap);
 				mPicture = shop.photoBitmap;
+				isPictureChanged = true;
 			} else {
 				PictureManager pm = new PictureManager();
 				pm.setOnPictureGetListener(new OnPictureGetListener() {

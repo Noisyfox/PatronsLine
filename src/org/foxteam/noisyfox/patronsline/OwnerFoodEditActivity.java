@@ -84,6 +84,7 @@ public class OwnerFoodEditActivity extends Activity {
 			mTextView_save_message.setText(R.string.edit_progress_create_food);
 			mButton_save.setText(R.string.edit_action_create_food);
 			setTitle(R.string.title_activity_owner_food_edit_create);
+			isPictureChanged = true;
 		} else {
 			mTextView_save_message.setText(R.string.edit_progress_save_food);
 			mButton_save.setText(R.string.edit_action_save_food);
@@ -239,8 +240,7 @@ public class OwnerFoodEditActivity extends Activity {
 			SessionManager sm = SessionManager.getSessionManager();
 			if (requestCode == OwnerFoodManageActivity.REQUESTCODE_NEW_FOOD) {
 				return sm.food_create(sid, mFoodName, mFoodIntroduction,
-						mFoodPrice, isPictureChanged ? mPicture : null,
-						mFoodSpecial);
+						mFoodPrice, mPicture, mFoodSpecial);
 			} else {
 				return sm.food_modify(fid, mFoodName, mFoodIntroduction,
 						mFoodPrice, isPictureChanged ? mPicture : null,
