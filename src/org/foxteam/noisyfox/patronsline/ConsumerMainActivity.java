@@ -17,6 +17,8 @@ public class ConsumerMainActivity extends SherlockFragmentActivity {
 	TabsAdapter mTabsAdapter;
 
 	InformationSession mInformationSession = null;
+	PatronsLineApplication mMyApp = (PatronsLineApplication) this
+			.getApplication();
 
 	PictureManager mAvatarPictureManager = new PictureManager();
 	OnPictureGetListener mAvatarOnPictureGetListener = new OnPictureGetListener() {
@@ -34,8 +36,6 @@ public class ConsumerMainActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected void onDestroy() {
-		PatronsLineApplication mMyApp = (PatronsLineApplication) this
-				.getApplication();
 		mMyApp.destroyLocationClient();
 		mMyApp.destroyEngineManager();
 		PictureManager.cacheSave();
@@ -47,6 +47,12 @@ public class ConsumerMainActivity extends SherlockFragmentActivity {
 		setTheme(R.style.Theme_Sherlock_Light);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_consumer_main);
+
+		mMyApp = (PatronsLineApplication) getApplication();
+
+		mMyApp.initEngineManager();
+		mMyApp.initLocationClient();
+
 		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 

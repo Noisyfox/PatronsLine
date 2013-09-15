@@ -52,8 +52,6 @@ public class PatronsLineApplication extends Application {
 		mDefualtPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		loadLocationData();
-		initEngineManager();
-		initLocationClient();
 
 		File f = new File(PATH_APP_WORKDIR);
 		f.mkdirs();
