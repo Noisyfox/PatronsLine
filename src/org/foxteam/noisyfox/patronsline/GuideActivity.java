@@ -122,7 +122,7 @@ public class GuideActivity extends Activity {
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		Editor e = pref.edit();
-		// e.putBoolean("firstRun", false);
+		e.putBoolean("firstRun", false);
 		e.commit();
 
 		Intent intent = new Intent();
