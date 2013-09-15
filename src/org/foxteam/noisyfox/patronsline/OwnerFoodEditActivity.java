@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -274,15 +273,6 @@ public class OwnerFoodEditActivity extends Activity {
 			mSaveTask = null;
 		}
 
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK
-				&& requestCode == OwnerFoodManageActivity.REQUESTCODE_NEW_FOOD) {
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
