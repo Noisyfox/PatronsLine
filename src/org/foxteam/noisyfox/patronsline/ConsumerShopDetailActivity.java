@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -146,7 +147,13 @@ public class ConsumerShopDetailActivity extends SherlockListActivity {
 						mInformationShop.mark));
 				// toggleBotton_bookmark;
 				// ratingBar_mark;
-				textView_introduction.setText(mInformationShop.introduction);
+				if (TextUtils.isEmpty(mInformationShop.introduction)) {
+					textView_introduction
+							.setText(R.string.information_no_introduction);
+				} else {
+					textView_introduction
+							.setText(mInformationShop.introduction);
+				}
 				textView_address.setText(mInformationShop.address);
 				textView_phone.setText(mInformationShop.phone_num);
 
