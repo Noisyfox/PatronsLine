@@ -15,7 +15,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class FavouriteFoodFragment extends SherlockListFragment {
+public class ConsumerFavouriteFoodFragment extends SherlockListFragment {
 
 	UserFoodAdapter mFoodAdapter = null;
 	private GetBookmarkTask mGetBookmarkTask = null;

@@ -67,15 +67,15 @@ public class ConsumerMainActivity extends SherlockFragmentActivity {
 		mTabsAdapter.addTab(
 				mTabHost.newTabSpec("favouriteFood").setIndicator(
 						getText(R.string.tab_label_favourite_food)),
-				FavouriteFoodFragment.class, null);
+				ConsumerFavouriteFoodFragment.class, null);
 		mTabsAdapter.addTab(
 				mTabHost.newTabSpec("favouriteShop").setIndicator(
 						getText(R.string.tab_label_favourite_shop)),
-				FavouriteShopFragment.class, null);
+				ConsumerFavouriteShopFragment.class, null);
 		mTabsAdapter.addTab(
 				mTabHost.newTabSpec("listShop").setIndicator(
 						getText(R.string.tab_label_list_shop)),
-				ListShopFragment.class, null);
+				ConsumerListShopFragment.class, null);
 
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));

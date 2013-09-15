@@ -10,16 +10,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class ListShopFragment extends SherlockListFragment {
+public class ConsumerFavouriteShopFragment extends SherlockListFragment {
 
 	UserShopAdapter mShopAdapter = null;
-	private GetShopListTask mGetShopListTask = null;
+	private GetBookmarkTask mGetBookmarkTask = null;
 
 	InformationSession mInformationSession = null;
 	private List<InformationShop> mShops = new ArrayList<InformationShop>();
@@ -32,7 +31,7 @@ public class ListShopFragment extends SherlockListFragment {
 
 		mInformationSession = SessionManager.getCurrentSession();
 
-		setEmptyText(getText(R.string.empty_text_no_list_shop));
+		setEmptyText(getText(R.string.empty_text_no_favourite_shop));
 		setHasOptionsMenu(true);
 
 		mShopAdapter = new UserShopAdapter(getActivity(), getListView());
@@ -48,8 +47,8 @@ public class ListShopFragment extends SherlockListFragment {
 
 	private void loadData() {
 		mShops.clear();
-		for (InformationShop is : mInformationSession.listShop) {
-			mShops.add(is);
+		for (InformationBookmarkShop ibs : mInformationSession.bookmarkShop) {
+			mShops.add(ibs.shop);
 		}
 		mShopAdapter.setData(mShops);
 	}
@@ -83,7 +82,7 @@ public class ListShopFragment extends SherlockListFragment {
 	}
 
 	private void refreshData() {
-		if (mGetShopListTask != null) {
+		if (mGetBookmarkTask != null) {
 			return;
 		}
 
@@ -91,17 +90,17 @@ public class ListShopFragment extends SherlockListFragment {
 
 		Log.d("msg", "update");
 
-		mInformationSession.listShop.clear();
-		mGetShopListTask = new GetShopListTask();
-		mGetShopListTask.execute();
+		mInformationSession.bookmarkFood.clear();
+		mGetBookmarkTask = new GetBookmarkTask();
+		mGetBookmarkTask.execute();
 	}
 
-	class GetShopListTask extends AsyncTask<Void, Void, Void> {
+	class GetBookmarkTask extends AsyncTask<Void, Void, Void> {
 		int errCode = -1;
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			errCode = SessionManager.getSessionManager().shop_list();
+			errCode = SessionManager.getSessionManager().bookmark_list_shop();
 
 			return null;
 		}
@@ -119,15 +118,15 @@ public class ListShopFragment extends SherlockListFragment {
 				}
 			} else {
 				Toast.makeText(getActivity(),
-						R.string.error_refresh_shoplist_failure,
+						R.string.error_refresh_bookmark_failure,
 						Toast.LENGTH_SHORT).show();
 			}
-			mGetShopListTask = null;
+			mGetBookmarkTask = null;
 		}
 
 		@Override
 		protected void onCancelled() {
-			mGetShopListTask = null;
+			mGetBookmarkTask = null;
 		}
 
 	}
