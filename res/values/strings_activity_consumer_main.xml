@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="tab_label_favourite_food">收藏菜肴</string>
     <string name="tab_label_favourite_shop">收藏店铺</string>
     <string name="tab_label_list_shop">周边店铺</string>
@@ -12,4 +13,9 @@
     <string name="msg_bookmark_delete_success">已取消收藏</string>
     <string name="label_price_change_up">%1$.1f↑</string>
     <string name="label_price_change_down">%1$.1f↓</string>
+    <string name="menu_order_shop">排序</string>
+    <string name="menu_sub_shop_newest">最新更新的店铺</string>
+    <string name="menu_sub_shop_activity">最近降价的店铺</string>
+    <string name="menu_sub_shop_rank">最受好评的店铺</string>
+
 </resources>

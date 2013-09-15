@@ -481,13 +481,29 @@ public class SessionManager {
 		}
 	}
 
-	public int shop_list() {
+	public enum ShopListOrder {
+		newest, activity, rank
+	}
+
+	public int shop_list(ShopListOrder order) {
 		Map<Object, Object> params = new HashMap<Object, Object>();
 		params.put("method", "shop.list");
 		params.put("uid", mSession.uid);
 		params.put("session", mSession.session);
 		params.put("school", mSession.user.school);
-		params.put("order", "rank");
+		switch (order) {
+		case activity:
+			params.put("order", "activity");
+			break;
+		case newest:
+			params.put("order", "newest");
+			break;
+		case rank:
+			params.put("order", "rank");
+			break;
+		default:
+			return ERROR_INTERNAL;
+		}
 
 		String response = NetworkHelper.doHttpRequest(
 				NetworkHelper.STR_SERVER_URL, params.entrySet());
