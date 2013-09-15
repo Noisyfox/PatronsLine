@@ -78,18 +78,19 @@ public class OwnerShopEditActivity extends Activity {
 				OwnerMainActivity.REQUESTCODE_EDIT_SHOP);
 
 		if (requestCode == OwnerMainActivity.REQUESTCODE_NEW_SHOP) {
-			mTextView_save_message.setText(R.string.edit_progress_create);
-			mButton_save.setText(R.string.edit_action_create);
+			mTextView_save_message.setText(R.string.edit_progress_create_shop);
+			mButton_save.setText(R.string.edit_action_create_shop);
 			setTitle(R.string.title_activity_owner_shop_edit_create);
 		} else {
-			mTextView_save_message.setText(R.string.edit_progress_save);
-			mButton_save.setText(R.string.edit_action_save);
+			mTextView_save_message.setText(R.string.edit_progress_save_shop);
+			mButton_save.setText(R.string.edit_action_save_shop);
 			setTitle(R.string.title_activity_owner_shop_edit_edit);
 			// 加载数据
 			final InformationShop shop = InformationManager
 					.obtainShopInformation(sid);
 			if (shop.photoBitmap != null) {
 				mImageView_picture.setImageBitmap(shop.photoBitmap);
+				mPicture = shop.photoBitmap;
 			} else {
 				PictureManager pm = new PictureManager();
 				pm.setOnPictureGetListener(new OnPictureGetListener() {
@@ -98,6 +99,7 @@ public class OwnerShopEditActivity extends Activity {
 						shop.photoBitmap = pic;
 						if (!isPictureChanged) {
 							mImageView_picture.setImageBitmap(shop.photoBitmap);
+							mPicture = pic;
 						}
 					}
 				});
@@ -196,7 +198,8 @@ public class OwnerShopEditActivity extends Activity {
 		protected Integer doInBackground(Void... params) {
 			SessionManager sm = SessionManager.getSessionManager();
 			return sm.shop_modify(sid, mShopName, mShopAddress,
-					mShopIntroduction, mShopPhone, mPicture);
+					mShopIntroduction, mShopPhone, isPictureChanged ? mPicture
+							: null);
 		}
 
 		@Override
@@ -213,12 +216,12 @@ public class OwnerShopEditActivity extends Activity {
 			} else {
 				if (requestCode == OwnerMainActivity.REQUESTCODE_NEW_SHOP) {
 					Toast.makeText(OwnerShopEditActivity.this,
-							R.string.error_create_failure, Toast.LENGTH_SHORT)
-							.show();
+							R.string.error_create_failure_shop,
+							Toast.LENGTH_SHORT).show();
 				} else {
 					Toast.makeText(OwnerShopEditActivity.this,
-							R.string.error_save_failure, Toast.LENGTH_SHORT)
-							.show();
+							R.string.error_save_failure_shop,
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 			showProgress(false);

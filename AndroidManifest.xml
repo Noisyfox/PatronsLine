@@ -124,6 +124,8 @@
             android:name="org.foxteam.noisyfox.patronsline.OwnerFoodManageActivity"
             android:theme="@style/Theme.Sherlock.Light" >
         </activity>
+        <activity android:name="org.foxteam.noisyfox.patronsline.OwnerFoodEditActivity" >
+        </activity>
     </application>
 
 </manifest>

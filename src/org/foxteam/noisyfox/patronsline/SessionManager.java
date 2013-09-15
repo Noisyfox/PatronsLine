@@ -435,16 +435,24 @@ public class SessionManager {
 		params.put("introduction", introduction);
 		params.put("phonenum", phonenum);
 
-		ImageUploader.Image img = null;
-		try {
-			img = new ImageUploader.Image("photo", "photoUpload_" + name, photo);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return ERROR_IO_FAILURE;
-		}
+		String response;
+		if (photo != null) {
+			ImageUploader.Image img = null;
+			try {
+				img = new ImageUploader.Image("photo", "photoUpload_" + name,
+						photo);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return ERROR_IO_FAILURE;
+			}
 
-		String response = ImageUploader.post(NetworkHelper.STR_SERVER_URL,
-				params.entrySet(), new ImageUploader.Image[] { img });
+			response = ImageUploader.post(NetworkHelper.STR_SERVER_URL,
+					params.entrySet(), new ImageUploader.Image[] { img });
+		} else {
+
+			response = ImageUploader.post(NetworkHelper.STR_SERVER_URL,
+					params.entrySet(), new ImageUploader.Image[] {});
+		}
 
 		if (response == null) {
 			return ERROR_NETWORK_FAILURE;
@@ -664,6 +672,7 @@ public class SessionManager {
 		String fid = jsonObj.getString("fid");
 		String sid = jsonObj.getString("sid");
 		String name = jsonObj.getString("name");
+		String introduction = jsonObj.getString("introduction");
 		float price = (float) jsonObj.getDouble("price");
 		float price_delta = (float) jsonObj.getDouble("price_delta");
 		boolean special = jsonObj.getBoolean("special");
@@ -677,6 +686,7 @@ public class SessionManager {
 		food.fid = fid;
 		food.sid = sid;
 		food.name = name;
+		food.introduction = introduction;
 		food.price = price;
 		food.price_delta = price_delta;
 		food.special = special;
@@ -690,6 +700,116 @@ public class SessionManager {
 		food.bookmark = bookmarked;
 
 		return food;
+	}
+
+	public int food_create(String sid, String name, String introduction,
+			float price, Bitmap photo, boolean special) {
+		Map<Object, Object> params = new HashMap<Object, Object>();
+
+		params.put("method", "food.create");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("sid", sid);
+		params.put("name", name);
+		params.put("price", price);
+		params.put("introduction", introduction);
+		params.put("special", special ? 1 : 0);
+
+		ImageUploader.Image img = null;
+		try {
+			img = new ImageUploader.Image("photo", "photoUpload_" + name, photo);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ERROR_IO_FAILURE;
+		}
+
+		String response = ImageUploader.post(NetworkHelper.STR_SERVER_URL,
+				params.entrySet(), new ImageUploader.Image[] { img });
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+			switch (result) {
+			case 1:// OK
+				return ERROR_OK;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
+	}
+
+	public int food_modify(String fid, String name, String introduction,
+			float price, Bitmap photo, boolean special) {
+		Map<Object, Object> params = new HashMap<Object, Object>();
+
+		params.put("method", "food.modify");
+		params.put("uid", mSession.uid);
+		params.put("session", mSession.session);
+		params.put("fid", fid);
+		params.put("name", name);
+		params.put("price", price);
+		params.put("introduction", introduction);
+		params.put("special", special ? 1 : 0);
+
+		String response;
+		if (photo != null) {
+			ImageUploader.Image img = null;
+			try {
+				img = new ImageUploader.Image("photo", "photoUpload_" + name,
+						photo);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return ERROR_IO_FAILURE;
+			}
+
+			response = ImageUploader.post(NetworkHelper.STR_SERVER_URL,
+					params.entrySet(), new ImageUploader.Image[] { img });
+		} else {
+
+			response = ImageUploader.post(NetworkHelper.STR_SERVER_URL,
+					params.entrySet(), new ImageUploader.Image[] {});
+		}
+
+		if (response == null) {
+			return ERROR_NETWORK_FAILURE;
+		}
+
+		Log.d("session", response);
+
+		try {
+			JSONTokener jsonParser = new JSONTokener(response);
+			jsonParser.nextTo('{');
+			if (!jsonParser.more()) {
+				throw new JSONException("Failed to read return value.");
+			}
+			JSONObject jsonObj = (JSONObject) jsonParser.nextValue();
+			int result = jsonObj.getInt("result");
+			switch (result) {
+			case 1:// OK
+				return ERROR_OK;
+			default:// 服务器错误
+				return ERROR_SERVER_FAILURE;
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return ERROR_SERVER_FAILURE;
+		}
 	}
 
 	public int food_delete(String sid, String[] fids) {

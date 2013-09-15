@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OwnerShopEditActivity" >
+    tools:context=".OwnerFoodEditActivity" >
 
     <LinearLayout
         android:id="@+id/save_status"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif-light"
-            android:text="@string/edit_progress_create_shop"
+            android:text="@string/edit_progress_create_food"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
@@ -56,41 +56,38 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="@string/edit_action_upload_picture_shop" />
+                    android:text="@string/edit_action_upload_picture_food" />
             </LinearLayout>
 
             <EditText
-                android:id="@+id/editText_shop_name"
+                android:id="@+id/editText_food_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/prompt_shop_name"
+                android:hint="@string/prompt_food_name"
                 android:maxLines="1"
                 android:singleLine="true" />
 
             <EditText
-                android:id="@+id/editText_shop_address"
+                android:id="@+id/editText_food_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/prompt_shop_address"
-                android:minLines="1"
-                android:singleLine="true" />
+                android:hint="@string/prompt_food_price"
+                android:inputType="numberDecimal" />
+
+            <CheckBox
+                android:id="@+id/checkBox_food_special"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_food_special" />
 
             <EditText
-                android:id="@+id/editText_shop_phone"
+                android:id="@+id/editText_food_introduction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/prompt_shop_phone"
-                android:inputType="phone" />
-
-            <EditText
-                android:id="@+id/editText_shop_introduction"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/prompt_shop_introduction"
+                android:hint="@string/prompt_food_introduction"
                 android:inputType="textMultiLine" />
 
             <Button
@@ -101,7 +98,7 @@
                 android:layout_marginTop="16dp"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
-                android:text="@string/edit_action_create_shop" />
+                android:text="@string/edit_action_create_food" />
         </LinearLayout>
     </ScrollView>
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_owner_food_edit_edit">修改菜肴信息</string>
+    <string name="title_activity_owner_food_edit_create">创建菜肴</string>
+    <string name="edit_progress_save_food">保存中</string>
+    <string name="edit_progress_create_food">创建中</string>
+    <string name="edit_action_change_picture_food">更改照片</string>
+    <string name="edit_action_upload_picture_food">上传照片</string>
+    <string name="edit_action_save_food"><b>保存更改</b></string>
+    <string name="edit_action_create_food"><b>创建菜肴</b></string>
+    <string name="label_food_special">本店特色</string>
+    <string name="prompt_food_name">在这里填菜肴名称</string>
+    <string name="prompt_food_price">要卖多少钱呢</string>
+    <string name="prompt_food_introduction">菜肴的简介</string>
+    <string name="error_save_failure_food">修改菜肴信息失败</string>
+    <string name="error_create_failure_food">创建菜肴失败</string>
+    <string name="error_price_too_low">不可以倒贴钱的哦</string>
+</resources>

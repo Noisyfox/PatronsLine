@@ -32,6 +32,9 @@ import android.widget.TextView;
 
 public class OwnerFoodManageActivity extends SherlockListActivity {
 
+	public static final int REQUESTCODE_NEW_FOOD = 1;
+	public static final int REQUESTCODE_EDIT_FOOD = 2;
+
 	private View mFoodDetailLoadView;
 	private View mFoodDetailView;
 
@@ -130,6 +133,12 @@ public class OwnerFoodManageActivity extends SherlockListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item == mMenuItem_add) {
+			Intent i = new Intent();
+			i.setClass(OwnerFoodManageActivity.this,
+					OwnerFoodEditActivity.class);
+			i.putExtra("sid", mInformationShop.sid);
+			i.putExtra("requestCode", REQUESTCODE_NEW_FOOD);
+			startActivityForResult(i, REQUESTCODE_NEW_FOOD);
 
 		} else if (item == mMenuItem_refresh) {
 			refresh();
@@ -139,7 +148,12 @@ public class OwnerFoodManageActivity extends SherlockListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-
+		InformationFood food = (InformationFood) v.getTag();
+		Intent i = new Intent();
+		i.setClass(OwnerFoodManageActivity.this, OwnerFoodEditActivity.class);
+		i.putExtra("fid", food.fid);
+		i.putExtra("requestCode", REQUESTCODE_EDIT_FOOD);
+		startActivityForResult(i, REQUESTCODE_EDIT_FOOD);
 	}
 
 	@Override

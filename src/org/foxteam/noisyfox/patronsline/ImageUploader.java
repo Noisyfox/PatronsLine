@@ -72,10 +72,11 @@ public class ImageUploader {
 			sb.append("Content-Disposition: form-data; name=\""
 					+ param.getKey() + "\"" + lineEnd);
 			sb.append(lineEnd);
-			sb.append(param.getValue() + lineEnd);
+			sb.append(param.getValue());
+			sb.append(lineEnd);
 		}
 		try {
-			output.writeBytes(sb.toString());// 发送表单字段数据
+			output.write(sb.toString().getBytes());// 发送表单字段数据
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
