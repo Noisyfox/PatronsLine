@@ -95,18 +95,19 @@ public class ConsumerFavouriteFoodFragment extends SherlockListFragment {
 		mGetBookmarkTask.execute();
 	}
 
+	//获取收藏详细内容的任务
 	class GetBookmarkTask extends AsyncTask<Void, Void, Void> {
 		int errCode = -1;
 
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Void doInBackground(Void... params) {//联机获取
 			errCode = SessionManager.getSessionManager().bookmark_list_food();
 
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Void result) {//内容显示
 			if (errCode == SessionManager.ERROR_OK) {
 				loadData();
 

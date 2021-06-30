@@ -20,6 +20,13 @@ import com.baidu.mapapi.search.MKWalkingRouteResult;
 import com.baidu.mapapi.search.MKWpNode;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 
+/**
+ * 将不支持并发的百度地图搜索模块转换为事件队列模式，
+ * 避免发生前一次搜索没有结束时进行下一次搜索而覆盖了上一次的结果
+ * 
+ * @author Noisyfox
+ *
+ */
 public class MKSearchOperator {
 
 	static final MKSearchOperator mInstance = new MKSearchOperator();
@@ -166,6 +173,9 @@ public class MKSearchOperator {
 		}
 	}
 
+	/*
+	 * 以下是对每种搜索操作设计的代理类
+	 */
 	abstract class SearchRequest {
 		MKSearchListener mListener = null;
 

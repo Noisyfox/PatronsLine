@@ -157,6 +157,7 @@ public class OwnerFoodOrderActivity extends SherlockListActivity {
 
 	}
 
+	//食物列表排序方式--按数量
 	static class FoodQuantComparator implements Comparator<InformationFood> {
 
 		@Override
@@ -168,6 +169,7 @@ public class OwnerFoodOrderActivity extends SherlockListActivity {
 
 	}
 
+	//食物列表排序方式--按比例
 	static class FoodRatioComparator implements Comparator<InformationFood> {
 
 		@Override

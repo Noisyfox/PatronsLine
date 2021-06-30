@@ -24,7 +24,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
 public class NetworkHelper {
-	static final String STR_SERVER_URL = "http://172.19.136.254/foodsrv/rest.php";
+	static final String STR_SERVER_URL = "http://ttan217.xicp.net/foodsrv/rest.php";
 
 	public static String doHttpRequest(String url,
 			Set<Entry<Object, Object>> data) {

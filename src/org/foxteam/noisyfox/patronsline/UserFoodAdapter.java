@@ -22,6 +22,11 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+/**
+ * 用户菜肴列表适配器
+ * @author Noisyfox
+ *
+ */
 class UserFoodAdapter extends BaseAdapter {
 
 	private final ListView mListView;

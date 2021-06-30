@@ -5,6 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+/**
+ * 在普通的ListAdapter基础上增加了标题显示，可以在列表的第一个位置显示不同的标题布局
+ * @author Noisyfox
+ *
+ */
 public abstract class TitledUserFoodAdapter extends UserFoodAdapter {
 
 	TitledUserFoodAdapter(Context context, ListView listView) {

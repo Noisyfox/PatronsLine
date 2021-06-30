@@ -95,6 +95,7 @@ public class ConsumerFavouriteShopFragment extends SherlockListFragment {
 		mGetBookmarkTask.execute();
 	}
 
+	//获取收藏
 	class GetBookmarkTask extends AsyncTask<Void, Void, Void> {
 		int errCode = -1;
 

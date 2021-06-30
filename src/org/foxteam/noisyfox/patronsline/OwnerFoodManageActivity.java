@@ -211,10 +211,15 @@ public class OwnerFoodManageActivity extends SherlockListActivity {
 		setListAdapter(mOrderFoodAdapter);
 	}
 
+	/**
+	 * 一个支持多选的ListViewAdapter，实现了每一元素的复选框的响应
+	 * @author Noisyfox
+	 *
+	 */
 	class ManageFoodAdapter extends BaseAdapter {
 
 		private List<InformationFood> mFoods = new ArrayList<InformationFood>();
-		private boolean mFoods_selected[] = null;
+		private boolean mFoods_selected[] = null;//复选框选中状态储存
 		private int mSelectedCount = 0;
 		private OnSelectedChangeListener mOnSelectedChangeListener = null;
 
@@ -223,6 +228,7 @@ public class OwnerFoodManageActivity extends SherlockListActivity {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
+				//记录每个复选框的状态
 				int position = (Integer) buttonView.getTag();
 				if (mFoods_selected[position] != isChecked) {
 					mFoods_selected[position] = isChecked;
@@ -240,6 +246,7 @@ public class OwnerFoodManageActivity extends SherlockListActivity {
 			return mSelectedCount;
 		}
 
+		//得到已选中的元素
 		public List<InformationFood> getSelected() {
 			List<InformationFood> selected = new ArrayList<InformationFood>();
 
